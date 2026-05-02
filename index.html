@@ -985,17 +985,24 @@
         .map(function(art) { return buildCard(art, currentLang); })
         .join('');
       var hash = window.location.hash.replace('#', '');
-      if (hash && window._articles[hash]) {
-        var sid  = hash === 'mainstream' ? 'article-section' : 'article-section-' + hash;
+      var utmCampaign = new URLSearchParams(window.location.search).get('utm_campaign');
+      var campaignMap = { 'le-estas-hablando-al-latino-equivocado': 'englishlatino' };
+      var target = hash || (utmCampaign && campaignMap[utmCampaign]) || '';
+      function tryOpenArticle(attempts) {
+        if (!target) return;
+        var sid  = target === 'mainstream' ? 'article-section' : 'article-section-' + target;
         var sect = document.getElementById(sid);
-        var card = document.getElementById('card-' + hash);
+        var card = document.getElementById('card-' + target);
         if (sect && card) {
           sect.classList.add('open');
           card.classList.add('active');
-          addGiscus(window._articles[hash]);
+          if (window._articles[target]) addGiscus(window._articles[target]);
           setTimeout(function() { sect.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+        } else if (attempts > 0) {
+          setTimeout(function() { tryOpenArticle(attempts - 1); }, 300);
         }
       }
+      tryOpenArticle(10);
     }
 
     function loadArticles() {
