@@ -634,24 +634,207 @@
     const ARTICLE_ORDER = ["englishlatino", "freelunch", "mainstream", "narrativeiap", "narrativegravity", "newflatness"];
     let currentLang = 'en';
 
-    const ui = {
-      en: {
-        blog_title: 'Blog',
-        nav_about: 'about',
-        nav_blog: 'blog',
-        back_to_blog: 'back to blog',
-        comments_label: '// responses',
-        art_disclosure: 'AI disclosure: Conceptualized and written by me, re-structured and style polished by Claude Sonnet 4.6.',
-      },
-      es: {
-        blog_title: 'Blog',
-        nav_about: 'about',
-        nav_blog: 'blog',
-        back_to_blog: 'volver al blog',
-        comments_label: '// respuestas',
-        art_disclosure: 'Nota de IA: Conceptualizado y escrito por mí, restructurado y estilizado con Claude Sonnet 4.6.',
-      }
-    };
+    const translations = {
+          en: {
+            nav_about: 'about',
+            nav_blog: 'blog',
+            nav_contact: 'contact',
+    
+            hero_label: 'creative lab',
+            hero_h1: 'Ideas at the edge of<br><span class="gradient-text">media &amp; culture</span>',
+            hero_description: 'A space for developing theories about how media shapes perception, culture moves through technology, and new forms of expression emerge from the collision of both.',
+            hero_cta_primary: 'read the latest',
+            hero_cta_ghost: 'about me',
+    
+            about_title: 'About',
+            about_p1: "I'm Manu — a producer. I've worked inside production companies and media corporations across American, European, and latam markets. Originally trained as an architect, I moved through design and direction before landing in the part of the industry where technology, content, and business models collide. This site is where I try to write about that.",
+            about_p2: "Most of my work lives in the gap between how the industry thinks storytelling works and how it actually behaves once something is made and released. I've spent years watching formats that traditional media dismissed as novelties turn into the fastest-growing segments in entertainment — and trying to build language for what's happening before the industry catches up.",
+            about_p3: "This site is the working notebook. The ideas here are in progress, not polished positions. Some will turn into something. Some will get dismantled by the next thing I read. That's the point.",
+    
+            interests_title: 'Interests',
+            tag_media_theory: 'media theory',
+            tag_digital_culture: 'digital culture',
+            tag_film: 'film',
+            tag_algorithms: 'algorithms',
+            tag_attention: 'attention',
+            tag_storytelling: 'storytelling',
+            tag_technology: 'technology',
+            tag_aesthetics: 'aesthetics',
+    
+            status_title: 'Status',
+            status_text: 'Currently exploring new ideas',
+    
+            blog_title: 'Blog',
+    
+            card_tag_engines: 'media theory',
+            card_title_engines: 'The Two Engines',
+            card_excerpt_engines: 'Every storytelling framework from Aristotle to Blake Snyder agrees on Act I. Streaming finally found a way to measure what it was worth.',
+    
+            card_tag_iap: 'opinion · media industry',
+            card_title_iap: 'Narrative IAP',
+            card_excerpt_iap: 'How vertical microdramas built a $26 billion industry by selling the one thing streaming never could — the compulsion to know what happens next.',
+    
+            card_tag_mainstream: 'digital culture',
+            card_title_mainstream: 'Mainstream Niche',
+            card_excerpt_mainstream: "Why the biggest stars you've never heard of are telling us everything about how media actually works now.",
+    
+            card_tag_flatness: 'aesthetics',
+            card_title_flatness: 'Notes on the New Flatness',
+            card_excerpt_flatness: 'From corporate Memphis to AI-generated imagery — tracing the visual homogenization of the internet and what it reveals about our collective imagination.',
+    
+            back_to_blog: 'back to blog',
+    
+            art_label_mainstream: 'Digital Culture',
+            art_h1_mainstream: 'Mainstream<br><em>Niche</em>',
+            art_deck_mainstream: "Why the biggest stars you've never heard of are telling us everything about how media actually works now.",
+    
+            art_label_iap: 'Opinion · Media Industry',
+            art_h1_iap: 'Narrative<br><em>IAP</em>',
+            art_deck_iap: 'How vertical microdramas built a $26 billion industry by selling the one thing streaming never could — the compulsion to know what happens next.',
+    
+            art_label_engines: 'Media Theory',
+            art_h1_engines: 'The Two<br><em>Engines</em>',
+            art_deck_engines: 'Every storytelling framework from Aristotle to Blake Snyder agrees on Act I. Streaming finally found a way to measure what it was worth.',
+    
+            art_label_flatness: 'Aesthetics',
+            art_h1_flatness: 'Notes on the<br><em>New Flatness</em>',
+            art_deck_flatness: 'From corporate Memphis to AI-generated imagery — tracing the visual homogenization of the internet and what it reveals about how design decisions get made at scale.',
+    
+            coda_mainstream: "The question worth sitting with: if scale no longer produces legibility, what does legibility even mean now — and who still needs it?",
+            coda_iap: "The question worth sitting with: if the cliffhanger is now a product feature rather than a storytelling choice, what does that mean for the writers who've spent careers learning to write them?",
+    
+            card_tag_englishlatino: 'u.s. latino · media strategy',
+            card_title_englishlatino: "You're Talking to the Wrong Latino",
+            card_excerpt_englishlatino: "Why the U.S. Hispanic market is not who the industry thinks it is &#8212; and what a $3.78 trillion audience actually looks like.",
+    
+            art_label_englishlatino: 'U.S. Latino · Media Strategy',
+            art_h1_englishlatino: "You're Talking to the<br><em>Wrong Latino</em>",
+            art_deck_englishlatino: "Why the U.S. Hispanic market is not who the industry thinks it is &#8212; and what a $3.78 trillion audience actually looks like.",
+    
+            coda_englishlatino: 'The industry has a name for the audience it needs to reach. It keeps calling it "the Hispanic market." That audience has its own name: American.',
+    
+            card_tag_freelunch: 'media industry · business models',
+            card_title_freelunch: 'The Free Lunch Bill',
+            card_excerpt_freelunch: 'For two decades, Meta and YouTube perfected the art of monetizing other people\'s work. The model made them dominant. The model also has a ceiling.',
+    
+            art_label_freelunch: 'Media Industry · Business Models',
+            art_h1_freelunch: 'The Free<br><em>Lunch Bill</em>',
+            art_deck_freelunch: 'For two decades, Meta and YouTube perfected the art of monetizing other people\'s work. The model made them dominant. But it also had a ceiling.',
+    
+            coda_freelunch: 'The lunch was never really free. Someone always paid. The interesting question is whether that\'s about to become visible on the balance sheet.',
+    
+            art_disclosure: 'AI disclosure: Conceptualized and written by me, re-structured and style polished by Claude Sonnet 4.6.',
+            art_disclosure2: 'AI disclosure: Conceptualized and written by me, structured and style polished by Claude Sonnet 4.6.',
+    
+    
+            subscribe_title: 'Newsletter',
+            subscribe_desc: 'New articles, straight to your inbox. No noise, no frequency commitment.',
+            subscribe_placeholder: 'your@email.com',
+            subscribe_btn: 'subscribe',
+            comments_label: '// responses',
+            footer_copy: '&copy; 2026 Manu',
+          },
+    
+          es: {
+            nav_about: 'sobre mí',
+            nav_blog: 'blog',
+            nav_contact: 'contacto',
+    
+            hero_label: 'Creative Lab',
+            hero_h1: 'Ideas en el límite entre<br><span class="gradient-text">los medios y la cultura</span>',
+            hero_description: 'Un espacio para pensar cómo los medios moldean la percepción, cómo la cultura circula a través de la tecnología y cómo, en el cruce entre ambas, aparecen nuevas formas de expresión.',
+            hero_cta_primary: 'leer lo último',
+            hero_cta_ghost: 'sobre mí',
+    
+            about_title: 'Sobre mí',
+            about_p1: 'Soy Manu, productor. Pasé años dentro de productoras y corporaciones de medios en mercados de América, Europa y Latinoamérica. Me formé como arquitecto, después pasé por el diseño y la dirección, y terminé en esa zona de la industria donde se cruzan tecnología, contenido y modelos de negocio. De eso escribo acá.',
+            about_p2: 'La mayor parte de lo que hago ocurre en la grieta entre cómo la industria cree que funciona el storytelling y cómo funciona de verdad cuando algo se hace, circula y encuentra audiencia. Pasé años viendo cómo formatos que los medios tradicionales descartaban como una novedad pasajera terminaban convirtiéndose en los segmentos de mayor crecimiento del entretenimiento, y tratando de ponerles nombre a fenómenos que la industria todavía no alcanza a leer.',
+            about_p3: 'Este sitio funciona como cuaderno de trabajo. Las ideas que aparecen acá están en proceso, no son posiciones cerradas. Algunas van a convertirse en algo. Otras van a quedar desarmadas por lo próximo que lea.',
+    
+            interests_title: 'Intereses',
+            tag_media_theory: 'media theory',
+            tag_digital_culture: 'cultura digital',
+            tag_film: 'cine',
+            tag_algorithms: 'algoritmos',
+            tag_attention: 'atención',
+            tag_storytelling: 'narrativa',
+            tag_technology: 'tecnología',
+            tag_aesthetics: 'estética',
+    
+            status_title: 'Estado',
+            status_text: 'Explorando ideas nuevas',
+    
+            blog_title: 'Blog',
+    
+            card_tag_engines: 'media theory',
+            card_title_engines: 'Los Dos Motores',
+            card_excerpt_engines: 'Todos los frameworks narrativos, de Aristóteles a Blake Snyder, arrancan igual. El streaming, por fin, permitió medir su verdadero valor.',
+    
+            card_tag_iap: 'media industry',
+            card_title_iap: 'Narrative IAP',
+            card_excerpt_iap: 'Cómo los microdramas verticales construyeron una industria de USD 26 mil millones vendiendo lo único que el streaming nunca pudo ofrecer: la compulsión de saber qué pasa después.',
+    
+            card_tag_mainstream: 'cultura digital',
+            card_title_mainstream: 'Mainstream Niche',
+            card_excerpt_mainstream: 'Por qué las estrellas más exitosas de las que nunca escuchaste hablar dicen todo sobre el funcionamiento actual de los mass media.',
+    
+            card_tag_flatness: 'estética',
+            card_title_flatness: 'Notas sobre la estética de la homogeneización',
+            card_excerpt_flatness: 'De Corporate Memphis a las imágenes generadas por IA, el rastro de la homogeneización visual de internet y lo que revela sobre nuestra imaginación colectiva.',
+    
+            back_to_blog: 'volver al blog',
+    
+            art_label_mainstream: 'Cultura Digital',
+            art_h1_mainstream: 'Mainstream<br><em>Niche</em>',
+            art_deck_mainstream: 'Por qué las estrellas más exitosas de las que nunca escuchaste hablar dicen todo sobre el funcionamiento actual de los mass media.',
+    
+            art_label_iap: 'Opinión · Industria de Medios',
+            art_h1_iap: 'Narrative<br><em>IAP</em>',
+            art_deck_iap: 'Cómo los microdramas verticales construyeron una industria de USD 26 mil millones vendiendo lo único que el streaming nunca pudo ofrecer: la compulsión de saber qué pasa después.',
+    
+            art_label_engines: 'Teoría de Medios',
+            art_h1_engines: 'Los Dos<br><em>Motores</em>',
+            art_deck_engines: 'Todos los frameworks narrativos, de Aristóteles a Blake Snyder, arrancan igual. El streaming, por fin, permitió medir esta unidad de valor.',
+    
+            art_label_flatness: 'Estética',
+            art_h1_flatness: 'Notas sobre la<br><em>estética de la homogeneización</em>',
+            art_deck_flatness: 'De Corporate Memphis a las imágenes generadas por IA, el rastro de la homogeneización visual de internet y lo que dice sobre cómo se toman decisiones de diseño a escala.',
+    
+            coda_mainstream: 'La pregunta que conviene dejar abierta es esta: si la escala ya no produce legibilidad, ¿qué significa hoy la legibilidad, y quién sigue necesitándola?',
+            coda_iap: 'La pregunta que conviene dejar abierta es esta: si el cliffhanger pasó a ser un producto feature y no una elección narrativa, ¿qué lugar les queda a los escritores que se formaron durante años para dominarlo?',
+    
+            card_tag_englishlatino: 'u.s. latino · estrategia de medios',
+            card_title_englishlatino: 'Le Estás Hablando al Latino Equivocado',
+            card_excerpt_englishlatino: 'Por qué el mercado hispano en EE.UU. no es lo que la industria cree que es, y qué implica una audiencia con un poder de compra de 3,78 billones de dólares.',
+    
+            art_label_englishlatino: 'U.S. Latino · Estrategia de Medios',
+            art_h1_englishlatino: 'Le Estás Hablando al<br><em>Latino Equivocado</em>',
+            art_deck_englishlatino: 'Por qué el mercado hispano en EE.UU. no es lo que la industria cree que es, y qué implica una audiencia con un poder de compra de 3,78 billones de dólares.',
+    
+            coda_englishlatino: 'La industria tiene un nombre para la audiencia que necesita conquistar. Sigue llamándola &#8220;el mercado hispano.&#8221; Esa audiencia tiene su propio nombre: americana.',
+    
+            card_tag_freelunch: 'industria de medios · modelos de negocio',
+            card_title_freelunch: 'Todo lo Gratis Tiene Precio',
+            card_excerpt_freelunch: 'Durante veinte años, Meta y YouTube perfeccionaron el arte de monetizar el trabajo ajeno. El modelo funcionó. El problema es que también tiene un techo.',
+    
+            art_label_freelunch: 'Industria de Medios · Modelos de Negocio',
+            art_h1_freelunch: 'Todo lo Gratis<br><em>Tiene Precio</em>',
+            art_deck_freelunch: 'Durante veinte años, Meta y YouTube perfeccionaron el arte de monetizar el trabajo ajeno. El modelo funcionó. El problema es que también tiene un techo — y las dos empresas lo están tocando al mismo tiempo, desde lados opuestos.',
+    
+            coda_freelunch: 'El modelo nunca fue gratis. Alguien siempre absorbió el costo. La pregunta es cuándo eso deja de ser invisible — y para quién.',
+    
+            art_disclosure: 'Divulgación IA: conceptualizado y escrito por mí, reestructurado y pulido en estilo por Claude Sonnet 4.6.',
+            art_disclosure2: 'Divulgación IA: conceptualizado y escrito por mí, estructurado y pulido en estilo por Claude Sonnet 4.6.',
+    
+    
+            subscribe_title: 'Newsletter',
+            subscribe_desc: 'Artículos nuevos directo a tu correo. Sin ruido, sin compromiso de frecuencia.',
+            subscribe_placeholder: 'tu@email.com',
+            subscribe_btn: 'suscribirme',
+            comments_label: '// respuestas',
+            footer_copy: '&copy; 2026 Manu',
+          }
+        };
 
     function buildCard(art, lang) {
       var tag     = art.card['tag_'     + lang] || art.card.tag_en;
@@ -756,11 +939,11 @@
       currentLang = lang;
       document.querySelectorAll('[data-i18n]').forEach(function(el) {
         var key = el.getAttribute('data-i18n');
-        if (ui[lang] && ui[lang][key] !== undefined) el.innerHTML = ui[lang][key];
+        if (translations[lang] && translations[lang][key] !== undefined) el.innerHTML = translations[lang][key];
       });
       document.querySelectorAll('[data-ui]').forEach(function(el) {
         var key = el.getAttribute('data-ui');
-        if (ui[lang] && ui[lang][key] !== undefined) el.innerHTML = ui[lang][key];
+        if (translations[lang] && translations[lang][key] !== undefined) el.innerHTML = translations[lang][key];
       });
       if (window._articles) {
         var grid = document.getElementById('posts-grid');
