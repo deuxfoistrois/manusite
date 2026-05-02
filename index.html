@@ -985,17 +985,14 @@
         .map(function(art) { return buildCard(art, currentLang); })
         .join('');
       var hash = window.location.hash.replace('#', '');
-      var utmCampaign = new URLSearchParams(window.location.search).get('utm_campaign');
-      var campaignMap = { 'le-estas-hablando-al-latino-equivocado': 'englishlatino' };
-      var target = hash || (utmCampaign && campaignMap[utmCampaign]) || '';
-      if (target && window._articles[target]) {
-        var sid  = target === 'mainstream' ? 'article-section' : 'article-section-' + target;
+      if (hash && window._articles[hash]) {
+        var sid  = hash === 'mainstream' ? 'article-section' : 'article-section-' + hash;
         var sect = document.getElementById(sid);
-        var card = document.getElementById('card-' + target);
+        var card = document.getElementById('card-' + hash);
         if (sect && card) {
           sect.classList.add('open');
           card.classList.add('active');
-          addGiscus(window._articles[target]);
+          addGiscus(window._articles[hash]);
           setTimeout(function() { sect.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
         }
       }
