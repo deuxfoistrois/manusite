@@ -4,19 +4,19 @@
   "giscus_term": "The Free Lunch Bill",
   "card": {
     "tag_en": "media industry · business models",
-    "tag_es": "",
+    "tag_es": "industria de medios · modelos de negocio",
     "title_en": "The Free Lunch Bill",
-    "title_es": "",
+    "title_es": "Todo lo Gratis Tiene Precio",
     "excerpt_en": "For two decades, Meta and YouTube perfected the art of monetizing other people\\",
-    "excerpt_es": ""
+    "excerpt_es": "Durante veinte años, Meta y YouTube perfeccionaron el arte de monetizar el trabajo ajeno. El modelo funcionó. El problema es que también tiene un techo."
   },
   "header": {
     "label_en": "Media Industry · Business Models",
-    "label_es": "",
+    "label_es": "Industria de Medios · Modelos de Negocio",
     "h1_en": "The Free<br><em>Lunch Bill</em>",
-    "h1_es": "",
+    "h1_es": "Todo lo Gratis<br><em>Tiene Precio</em>",
     "deck_en": "For two decades, Meta and YouTube perfected the art of monetizing other people\\",
-    "deck_es": ""
+    "deck_es": "Durante veinte años, Meta y YouTube perfeccionaron el arte de monetizar el trabajo ajeno. El modelo funcionó. El problema es que también tiene un techo — y las dos empresas lo están tocando al mismo tiempo, desde lados opuestos."
   },
   "hero_img": "",
   "lede_en": "",
@@ -33,6 +33,6 @@
     }
   ],
   "coda_en": "The lunch was never really free. Someone always paid. The interesting question is whether that's about to become visible on the balance sheet.",
-  "coda_es": "",
+  "coda_es": "El modelo nunca fue gratis. Alguien siempre absorbió el costo. La pregunta es cuándo eso deja de ser invisible — y para quién.",
   "hero_src": "assets/heroes/freelunch.webp"
 }

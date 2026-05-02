@@ -4,19 +4,19 @@
   "giscus_term": "Narrative IAP",
   "card": {
     "tag_en": "opinion · media industry",
-    "tag_es": "",
+    "tag_es": "media industry",
     "title_en": "Narrative IAP",
-    "title_es": "",
+    "title_es": "Narrative IAP",
     "excerpt_en": "How vertical microdramas built a $26 billion industry by selling the one thing streaming never could — the compulsion to know what happens next.",
-    "excerpt_es": ""
+    "excerpt_es": "Cómo los microdramas verticales construyeron una industria de USD 26 mil millones vendiendo lo único que el streaming nunca pudo ofrecer: la compulsión de saber qué pasa después."
   },
   "header": {
     "label_en": "Opinion · Media Industry",
-    "label_es": "",
+    "label_es": "Opinión · Industria de Medios",
     "h1_en": "Narrative<br><em>IAP</em>",
-    "h1_es": "",
+    "h1_es": "Narrative<br><em>IAP</em>",
     "deck_en": "How vertical microdramas built a $26 billion industry by selling the one thing streaming never could — the compulsion to know what happens next.",
-    "deck_es": ""
+    "deck_es": "Cómo los microdramas verticales construyeron una industria de USD 26 mil millones vendiendo lo único que el streaming nunca pudo ofrecer: la compulsión de saber qué pasa después."
   },
   "hero_img": "",
   "lede_en": "",
@@ -33,6 +33,6 @@
     }
   ],
   "coda_en": "The question worth sitting with: if the cliffhanger is now a product feature rather than a storytelling choice, what does that mean for the writers who've spent careers learning to write them?",
-  "coda_es": "",
+  "coda_es": "La pregunta que conviene dejar abierta es esta: si el cliffhanger pasó a ser un producto feature y no una elección narrativa, ¿qué lugar les queda a los escritores que se formaron durante años para dominarlo?",
   "hero_src": ""
 }

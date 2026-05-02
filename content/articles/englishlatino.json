@@ -4,19 +4,19 @@
   "giscus_term": "You're Talking to the Wrong Latino",
   "card": {
     "tag_en": "u.s. latino · media strategy",
-    "tag_es": "",
+    "tag_es": "u.s. latino · estrategia de medios",
     "title_en": "You're Talking to the Wrong Latino",
-    "title_es": "",
+    "title_es": "Le Estás Hablando al Latino Equivocado",
     "excerpt_en": "Why the U.S. Hispanic market is not who the industry thinks it is — and what a $3.78 trillion audience actually looks like.",
-    "excerpt_es": ""
+    "excerpt_es": "Por qué el mercado hispano en EE.UU. no es lo que la industria cree que es, y qué implica una audiencia con un poder de compra de 3,78 billones de dólares."
   },
   "header": {
     "label_en": "U.S. Latino · Media Strategy",
-    "label_es": "",
+    "label_es": "U.S. Latino · Estrategia de Medios",
     "h1_en": "You're Talking to the<br><em>Wrong Latino</em>",
-    "h1_es": "",
+    "h1_es": "Le Estás Hablando al<br><em>Latino Equivocado</em>",
     "deck_en": "Why the U.S. Hispanic market is not who the industry thinks it is — and what a $3.78 trillion audience actually looks like.",
-    "deck_es": ""
+    "deck_es": "Por qué el mercado hispano en EE.UU. no es lo que la industria cree que es, y qué implica una audiencia con un poder de compra de 3,78 billones de dólares."
   },
   "hero_img": "",
   "lede_en": "On a flight from Mexico City to Miami, I sat next to a twenty-something Latina watching a Mexican series on her iPad. The audio was in Spanish. The subtitles were in English. She wasn't struggling with the language — she just preferred to read it that way. That small detail stuck with me: a young woman fully inside her culture, and equally inside another one. Not caught between them. At home in both. That's the audience the industry keeps misreading.",
@@ -78,6 +78,6 @@
     }
   ],
   "coda_en": "The industry has a name for the audience it needs to reach. It keeps calling it “the Hispanic market.” That audience has its own name: American.",
-  "coda_es": "",
+  "coda_es": "La industria tiene un nombre para la audiencia que necesita conquistar. Sigue llamándola “el mercado hispano.” Esa audiencia tiene su propio nombre: americana.",
   "hero_src": "assets/heroes/englishlatino.png"
 }

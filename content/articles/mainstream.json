@@ -4,19 +4,19 @@
   "giscus_term": "Mainstream Niche",
   "card": {
     "tag_en": "digital culture",
-    "tag_es": "",
+    "tag_es": "cultura digital",
     "title_en": "Mainstream Niche",
-    "title_es": "",
+    "title_es": "Mainstream Niche",
     "excerpt_en": "Why the biggest stars you've never heard of are telling us everything about how media actually works now.",
-    "excerpt_es": ""
+    "excerpt_es": "Por qué las estrellas más exitosas de las que nunca escuchaste hablar dicen todo sobre el funcionamiento actual de los mass media."
   },
   "header": {
     "label_en": "Digital Culture",
-    "label_es": "",
+    "label_es": "Cultura Digital",
     "h1_en": "Mainstream<br><em>Niche</em>",
-    "h1_es": "",
+    "h1_es": "Mainstream<br><em>Niche</em>",
     "deck_en": "Why the biggest stars you've never heard of are telling us everything about how media actually works now.",
-    "deck_es": ""
+    "deck_es": "Por qué las estrellas más exitosas de las que nunca escuchaste hablar dicen todo sobre el funcionamiento actual de los mass media."
   },
   "hero_img": "",
   "lede_en": "",
@@ -33,6 +33,6 @@
     }
   ],
   "coda_en": "The question worth sitting with: if scale no longer produces legibility, what does legibility even mean now — and who still needs it?",
-  "coda_es": "",
+  "coda_es": "La pregunta que conviene dejar abierta es esta: si la escala ya no produce legibilidad, ¿qué significa hoy la legibilidad, y quién sigue necesitándola?",
   "hero_src": ""
 }
