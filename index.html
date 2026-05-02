@@ -6,7 +6,7 @@
   <title>Manu — Ideas &amp; Media Theories</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -585,18 +585,14 @@
       <h2 class="section-title" data-i18n="blog_title">Blog</h2>
     </div>
 
-  <!-- BLOG SECTION -->
   <section id="blog" class="section fade-in">
     <div class="section-header">
       <span class="section-num">// 02</span>
       <h2 class="section-title" data-i18n="blog_title">Blog</h2>
     </div>
-    <div class="posts-grid" id="posts-grid">
-      <!-- Cards injected by JS -->
-    </div>
+    <div class="posts-grid" id="posts-grid"></div>
   </section>
 
-  <!-- ARTICLES injected by JS -->
   <div id="articles-container"></div>
 
   <!-- SUBSCRIBE -->
@@ -631,309 +627,13 @@
     </div>
   </footer>
 
-  <script>
-    // ── i18n Translation System ────────────────────────────────────────────
-    let currentLang = 'en';
-
-    const translations = {
-      en: {
-        nav_about: 'about',
-        nav_blog: 'blog',
-        nav_contact: 'contact',
-
-        hero_label: 'creative lab',
-        hero_h1: 'Ideas at the edge of<br><span class="gradient-text">media &amp; culture</span>',
-        hero_description: 'A space for developing theories about how media shapes perception, culture moves through technology, and new forms of expression emerge from the collision of both.',
-        hero_cta_primary: 'read the latest',
-        hero_cta_ghost: 'about me',
-
-        about_title: 'About',
-        about_p1: "I'm Manu — a producer. I've worked inside production companies and media corporations across American, European, and latam markets. Originally trained as an architect, I moved through design and direction before landing in the part of the industry where technology, content, and business models collide. This site is where I try to write about that.",
-        about_p2: "Most of my work lives in the gap between how the industry thinks storytelling works and how it actually behaves once something is made and released. I've spent years watching formats that traditional media dismissed as novelties turn into the fastest-growing segments in entertainment — and trying to build language for what's happening before the industry catches up.",
-        about_p3: "This site is the working notebook. The ideas here are in progress, not polished positions. Some will turn into something. Some will get dismantled by the next thing I read. That's the point.",
-
-        interests_title: 'Interests',
-        tag_media_theory: 'media theory',
-        tag_digital_culture: 'digital culture',
-        tag_film: 'film',
-        tag_algorithms: 'algorithms',
-        tag_attention: 'attention',
-        tag_storytelling: 'storytelling',
-        tag_technology: 'technology',
-        tag_aesthetics: 'aesthetics',
-
-        status_title: 'Status',
-        status_text: 'Currently exploring new ideas',
-
-        blog_title: 'Blog',
-
-        card_tag_engines: 'media theory',
-        card_title_engines: 'The Two Engines',
-        card_excerpt_engines: 'Every storytelling framework from Aristotle to Blake Snyder agrees on Act I. Streaming finally found a way to measure what it was worth.',
-
-        card_tag_iap: 'opinion · media industry',
-        card_title_iap: 'Narrative IAP',
-        card_excerpt_iap: 'How vertical microdramas built a $26 billion industry by selling the one thing streaming never could — the compulsion to know what happens next.',
-
-        card_tag_mainstream: 'digital culture',
-        card_title_mainstream: 'Mainstream Niche',
-        card_excerpt_mainstream: "Why the biggest stars you've never heard of are telling us everything about how media actually works now.",
-
-        card_tag_flatness: 'aesthetics',
-        card_title_flatness: 'Notes on the New Flatness',
-        card_excerpt_flatness: 'From corporate Memphis to AI-generated imagery — tracing the visual homogenization of the internet and what it reveals about our collective imagination.',
-
-        back_to_blog: 'back to blog',
-
-        art_label_mainstream: 'Digital Culture',
-        art_h1_mainstream: 'Mainstream<br><em>Niche</em>',
-        art_deck_mainstream: "Why the biggest stars you've never heard of are telling us everything about how media actually works now.",
-
-        art_label_iap: 'Opinion · Media Industry',
-        art_h1_iap: 'Narrative<br><em>IAP</em>',
-        art_deck_iap: 'How vertical microdramas built a $26 billion industry by selling the one thing streaming never could — the compulsion to know what happens next.',
-
-        art_label_engines: 'Media Theory',
-        art_h1_engines: 'The Two<br><em>Engines</em>',
-        art_deck_engines: 'Every storytelling framework from Aristotle to Blake Snyder agrees on Act I. Streaming finally found a way to measure what it was worth.',
-
-        art_label_flatness: 'Aesthetics',
-        art_h1_flatness: 'Notes on the<br><em>New Flatness</em>',
-        art_deck_flatness: 'From corporate Memphis to AI-generated imagery — tracing the visual homogenization of the internet and what it reveals about how design decisions get made at scale.',
-
-        coda_mainstream: "The question worth sitting with: if scale no longer produces legibility, what does legibility even mean now — and who still needs it?",
-        coda_iap: "The question worth sitting with: if the cliffhanger is now a product feature rather than a storytelling choice, what does that mean for the writers who've spent careers learning to write them?",
-
-        card_tag_englishlatino: 'u.s. latino · media strategy',
-        card_title_englishlatino: "You're Talking to the Wrong Latino",
-        card_excerpt_englishlatino: "Why the U.S. Hispanic market is not who the industry thinks it is &#8212; and what a $3.78 trillion audience actually looks like.",
-
-        art_label_englishlatino: 'U.S. Latino · Media Strategy',
-        art_h1_englishlatino: "You're Talking to the<br><em>Wrong Latino</em>",
-        art_deck_englishlatino: "Why the U.S. Hispanic market is not who the industry thinks it is &#8212; and what a $3.78 trillion audience actually looks like.",
-
-        coda_englishlatino: 'The industry has a name for the audience it needs to reach. It keeps calling it "the Hispanic market." That audience has its own name: American.',
-
-        card_tag_freelunch: 'media industry · business models',
-        card_title_freelunch: 'The Free Lunch Bill',
-        card_excerpt_freelunch: 'For two decades, Meta and YouTube perfected the art of monetizing other people\'s work. The model made them dominant. The model also has a ceiling.',
-
-        art_label_freelunch: 'Media Industry · Business Models',
-        art_h1_freelunch: 'The Free<br><em>Lunch Bill</em>',
-        art_deck_freelunch: 'For two decades, Meta and YouTube perfected the art of monetizing other people\'s work. The model made them dominant. But it also had a ceiling.',
-
-        coda_freelunch: 'The lunch was never really free. Someone always paid. The interesting question is whether that\'s about to become visible on the balance sheet.',
-
-        art_disclosure: 'AI disclosure: Conceptualized and written by me, re-structured and style polished by Claude Sonnet 4.6.',
-        art_disclosure2: 'AI disclosure: Conceptualized and written by me, structured and style polished by Claude Sonnet 4.6.',
-
-
-        subscribe_title: 'Newsletter',
-        subscribe_desc: 'New articles, straight to your inbox. No noise, no frequency commitment.',
-        subscribe_placeholder: 'your@email.com',
-        subscribe_btn: 'subscribe',
-        comments_label: '// responses',
-        footer_copy: '&copy; 2026 Manu',
-      },
-
-      es: {
-        nav_about: 'sobre mí',
-        nav_blog: 'blog',
-        nav_contact: 'contacto',
-
-        hero_label: 'Creative Lab',
-        hero_h1: 'Ideas en el límite entre<br><span class="gradient-text">los medios y la cultura</span>',
-        hero_description: 'Un espacio para pensar cómo los medios moldean la percepción, cómo la cultura circula a través de la tecnología y cómo, en el cruce entre ambas, aparecen nuevas formas de expresión.',
-        hero_cta_primary: 'leer lo último',
-        hero_cta_ghost: 'sobre mí',
-
-        about_title: 'Sobre mí',
-        about_p1: 'Soy Manu, productor. Pasé años dentro de productoras y corporaciones de medios en mercados de América, Europa y Latinoamérica. Me formé como arquitecto, después pasé por el diseño y la dirección, y terminé en esa zona de la industria donde se cruzan tecnología, contenido y modelos de negocio. De eso escribo acá.',
-        about_p2: 'La mayor parte de lo que hago ocurre en la grieta entre cómo la industria cree que funciona el storytelling y cómo funciona de verdad cuando algo se hace, circula y encuentra audiencia. Pasé años viendo cómo formatos que los medios tradicionales descartaban como una novedad pasajera terminaban convirtiéndose en los segmentos de mayor crecimiento del entretenimiento, y tratando de ponerles nombre a fenómenos que la industria todavía no alcanza a leer.',
-        about_p3: 'Este sitio funciona como cuaderno de trabajo. Las ideas que aparecen acá están en proceso, no son posiciones cerradas. Algunas van a convertirse en algo. Otras van a quedar desarmadas por lo próximo que lea.',
-
-        interests_title: 'Intereses',
-        tag_media_theory: 'media theory',
-        tag_digital_culture: 'cultura digital',
-        tag_film: 'cine',
-        tag_algorithms: 'algoritmos',
-        tag_attention: 'atención',
-        tag_storytelling: 'narrativa',
-        tag_technology: 'tecnología',
-        tag_aesthetics: 'estética',
-
-        status_title: 'Estado',
-        status_text: 'Explorando ideas nuevas',
-
-        blog_title: 'Blog',
-
-        card_tag_engines: 'media theory',
-        card_title_engines: 'Los Dos Motores',
-        card_excerpt_engines: 'Todos los frameworks narrativos, de Aristóteles a Blake Snyder, arrancan igual. El streaming, por fin, permitió medir su verdadero valor.',
-
-        card_tag_iap: 'media industry',
-        card_title_iap: 'Narrative IAP',
-        card_excerpt_iap: 'Cómo los microdramas verticales construyeron una industria de USD 26 mil millones vendiendo lo único que el streaming nunca pudo ofrecer: la compulsión de saber qué pasa después.',
-
-        card_tag_mainstream: 'cultura digital',
-        card_title_mainstream: 'Mainstream Niche',
-        card_excerpt_mainstream: 'Por qué las estrellas más exitosas de las que nunca escuchaste hablar dicen todo sobre el funcionamiento actual de los mass media.',
-
-        card_tag_flatness: 'estética',
-        card_title_flatness: 'Notas sobre la estética de la homogeneización',
-        card_excerpt_flatness: 'De Corporate Memphis a las imágenes generadas por IA, el rastro de la homogeneización visual de internet y lo que revela sobre nuestra imaginación colectiva.',
-
-        back_to_blog: 'volver al blog',
-
-        art_label_mainstream: 'Cultura Digital',
-        art_h1_mainstream: 'Mainstream<br><em>Niche</em>',
-        art_deck_mainstream: 'Por qué las estrellas más exitosas de las que nunca escuchaste hablar dicen todo sobre el funcionamiento actual de los mass media.',
-
-        art_label_iap: 'Opinión · Industria de Medios',
-        art_h1_iap: 'Narrative<br><em>IAP</em>',
-        art_deck_iap: 'Cómo los microdramas verticales construyeron una industria de USD 26 mil millones vendiendo lo único que el streaming nunca pudo ofrecer: la compulsión de saber qué pasa después.',
-
-        art_label_engines: 'Teoría de Medios',
-        art_h1_engines: 'Los Dos<br><em>Motores</em>',
-        art_deck_engines: 'Todos los frameworks narrativos, de Aristóteles a Blake Snyder, arrancan igual. El streaming, por fin, permitió medir esta unidad de valor.',
-
-        art_label_flatness: 'Estética',
-        art_h1_flatness: 'Notas sobre la<br><em>estética de la homogeneización</em>',
-        art_deck_flatness: 'De Corporate Memphis a las imágenes generadas por IA, el rastro de la homogeneización visual de internet y lo que dice sobre cómo se toman decisiones de diseño a escala.',
-
-        coda_mainstream: 'La pregunta que conviene dejar abierta es esta: si la escala ya no produce legibilidad, ¿qué significa hoy la legibilidad, y quién sigue necesitándola?',
-        coda_iap: 'La pregunta que conviene dejar abierta es esta: si el cliffhanger pasó a ser un producto feature y no una elección narrativa, ¿qué lugar les queda a los escritores que se formaron durante años para dominarlo?',
-
-        card_tag_englishlatino: 'u.s. latino · estrategia de medios',
-        card_title_englishlatino: 'Le Estás Hablando al Latino Equivocado',
-        card_excerpt_englishlatino: 'Por qué el mercado hispano en EE.UU. no es lo que la industria cree que es, y qué implica una audiencia con un poder de compra de 3,78 billones de dólares.',
-
-        art_label_englishlatino: 'U.S. Latino · Estrategia de Medios',
-        art_h1_englishlatino: 'Le Estás Hablando al<br><em>Latino Equivocado</em>',
-        art_deck_englishlatino: 'Por qué el mercado hispano en EE.UU. no es lo que la industria cree que es, y qué implica una audiencia con un poder de compra de 3,78 billones de dólares.',
-
-        coda_englishlatino: 'La industria tiene un nombre para la audiencia que necesita conquistar. Sigue llamándola &#8220;el mercado hispano.&#8221; Esa audiencia tiene su propio nombre: americana.',
-
-        card_tag_freelunch: 'industria de medios · modelos de negocio',
-        card_title_freelunch: 'Todo lo Gratis Tiene Precio',
-        card_excerpt_freelunch: 'Durante veinte años, Meta y YouTube perfeccionaron el arte de monetizar el trabajo ajeno. El modelo funcionó. El problema es que también tiene un techo.',
-
-        art_label_freelunch: 'Industria de Medios · Modelos de Negocio',
-        art_h1_freelunch: 'Todo lo Gratis<br><em>Tiene Precio</em>',
-        art_deck_freelunch: 'Durante veinte años, Meta y YouTube perfeccionaron el arte de monetizar el trabajo ajeno. El modelo funcionó. El problema es que también tiene un techo — y las dos empresas lo están tocando al mismo tiempo, desde lados opuestos.',
-
-        coda_freelunch: 'El modelo nunca fue gratis. Alguien siempre absorbió el costo. La pregunta es cuándo eso deja de ser invisible — y para quién.',
-
-        art_disclosure: 'Divulgación IA: conceptualizado y escrito por mí, reestructurado y pulido en estilo por Claude Sonnet 4.6.',
-        art_disclosure2: 'Divulgación IA: conceptualizado y escrito por mí, estructurado y pulido en estilo por Claude Sonnet 4.6.',
-
-
-        subscribe_title: 'Newsletter',
-        subscribe_desc: 'Artículos nuevos directo a tu correo. Sin ruido, sin compromiso de frecuencia.',
-        subscribe_placeholder: 'tu@email.com',
-        subscribe_btn: 'suscribirme',
-        comments_label: '// respuestas',
-        footer_copy: '&copy; 2026 Manu',
-      }
-    };
-
-    function switchLang(lang) {
-      currentLang = lang;
-
-      // Update all data-i18n elements
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang][key] !== undefined) {
-          el.innerHTML = translations[lang][key];
-        }
-      });
-
-      // Show/hide language-specific content divs
-      document.querySelectorAll('.art-content[data-lang]').forEach(el => {
-        el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
-      });
-
-      // Toggle active button state
-      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
-
-      // Update html lang attribute
-      document.documentElement.lang = lang;
-    }
-  </script>
-
-  <script>
-    // Nav scroll
-    const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
-
-    // Fade-in on scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-    // Smooth scroll for nav links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href === '#') return;
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
-
-    // Toggle article inline
-    function toggleArticle(id) {
-      const section = document.getElementById('article-section' + (id === 'mainstream' ? '' : '-' + id));
-      const card = document.getElementById('card-' + id);
-      const isOpen = section.classList.contains('open');
-
-      // Close any other open article first
-      document.querySelectorAll('[id^="article-section"]').forEach(s => s.classList.remove('open'));
-      document.querySelectorAll('.post-card').forEach(c => c.classList.remove('active'));
-
-      if (isOpen) {
-        history.replaceState(null, '', window.location.pathname);
-        document.getElementById('blog').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        section.classList.add('open');
-        card.classList.add('active');
-        history.replaceState(null, '', '#' + id);
-        setTimeout(() => {
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 50);
-      }
-    }
-
-    // Open article from hash on load
-    document.addEventListener('DOMContentLoaded', () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash) {
-        const section = document.getElementById('article-section' + (hash === 'mainstream' ? '' : '-' + hash));
-        const card = document.getElementById('card-' + hash);
-        if (section && card) {
-          section.classList.add('open');
-          card.classList.add('active');
-          setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-        }
-      }
-    });
-  </script>
-
 </body>
 </html>
 
   <script>
-    // ── ARTICLE ORDER ───────────────────────────────────────────────────────
-    const ARTICLE_ORDER = ['englishlatino', 'freelunch', 'mainstream', 'narrativeiap', 'narrativegravity', 'newflatness'];
-
-    // ── LANGUAGE STATE ──────────────────────────────────────────────────────
+    const ARTICLE_ORDER = ["englishlatino", "freelunch", "mainstream", "narrativeiap", "narrativegravity", "newflatness"];
     let currentLang = 'en';
 
-    // ── TRANSLATIONS (card/nav/ui strings) ─────────────────────────────────
-    // These are loaded from article JSON files; only UI strings live here.
     const ui = {
       en: {
         blog_title: 'Blog',
@@ -942,10 +642,6 @@
         back_to_blog: 'back to blog',
         comments_label: '// responses',
         art_disclosure: 'AI disclosure: Conceptualized and written by me, re-structured and style polished by Claude Sonnet 4.6.',
-        subscribe_title: 'Subscribe',
-        subscribe_body: 'Receive new posts by email.',
-        subscribe_placeholder: 'your@email.com',
-        subscribe_btn: 'subscribe',
       },
       es: {
         blog_title: 'Blog',
@@ -954,164 +650,140 @@
         back_to_blog: 'volver al blog',
         comments_label: '// respuestas',
         art_disclosure: 'Nota de IA: Conceptualizado y escrito por mí, restructurado y estilizado con Claude Sonnet 4.6.',
-        subscribe_title: 'Suscribite',
-        subscribe_body: 'Recibí nuevos artículos por email.',
-        subscribe_placeholder: 'tu@email.com',
-        subscribe_btn: 'suscribirse',
       }
     };
 
-    // ── BUILD CARD HTML ─────────────────────────────────────────────────────
     function buildCard(art, lang) {
-      const l = lang;
-      const tag   = art.card[`tag_${l}`]   || art.card.tag_en;
-      const title = art.card[`title_${l}`] || art.card.title_en;
-      const excerpt = art.card[`excerpt_${l}`] || art.card.excerpt_en;
-      return `
-      <button class="post-card" id="card-${art.id}" onclick="toggleArticle('${art.id}')">
-        <div>
-          <div class="post-tag">${tag}</div>
-          <div class="post-title">${title}</div>
-          <div class="post-excerpt">${excerpt}</div>
-        </div>
-        <div style="text-align:right">
-          <div class="post-date">${art.date}</div>
-          <div class="post-arrow">&#8594;</div>
-        </div>
-      </button>`;
+      var tag     = art.card['tag_'     + lang] || art.card.tag_en;
+      var title   = art.card['title_'   + lang] || art.card.title_en;
+      var excerpt = art.card['excerpt_' + lang] || art.card.excerpt_en;
+      return '<button class="post-card" id="card-' + art.id + '" onclick="toggleArticle(\'' + art.id + '\')">'
+           + '<div>'
+           + '<div class="post-tag">'     + tag     + '</div>'
+           + '<div class="post-title">'   + title   + '</div>'
+           + '<div class="post-excerpt">' + excerpt + '</div>'
+           + '</div>'
+           + '<div style="text-align:right">'
+           + '<div class="post-date">'  + art.date + '</div>'
+           + '<div class="post-arrow">&#8594;</div>'
+           + '</div>'
+           + '</button>';
     }
 
-    // ── BUILD SECTION CONTENT ───────────────────────────────────────────────
     function buildSectionContent(art, lang) {
-      const l = lang;
-      let html = '';
-      const lede = art[`lede_${l}`] || art.lede_en;
-      
-      art.sections.forEach((sec, i) => {
-        const heading = sec[`heading_${l}`] || sec.heading_en || '';
-        const body    = sec[`body_${l}`]    || sec.body_en    || '';
-        const pq      = sec[`pullquote_${l}`] || '';
-        const chart   = sec.chart_after || '';
-
-        let block = '<div class="art-content">';
-        // Lede only in first section
-        if (i === 0 && lede) block += `<p class="art-lede">${lede}</p>`;
-        if (heading) block += `<h2>${heading}</h2>`;
-        block += body;
-        if (pq) block += `<div class="art-pullquote">${pq}</div>`;
-        block += '</div>';
-
-        html += block;
-        if (chart) html += chart;
+      var out  = '';
+      var lede = art['lede_' + lang] || art.lede_en || '';
+      art.sections.forEach(function(sec, i) {
+        var heading   = sec['heading_'   + lang] || sec.heading_en   || '';
+        var body      = sec['body_'      + lang] || sec.body_en      || '';
+        var pullquote = sec['pullquote_' + lang] || sec.pullquote_en || '';
+        var chart     = sec.chart_after || '';
+        out += '<div class="art-content">';
+        if (i === 0 && lede) out += '<p class="art-lede">' + lede + '</p>';
+        if (heading)         out += '<h2>' + heading + '</h2>';
+        out += body;
+        if (pullquote) out += '<div class="art-pullquote">' + pullquote + '</div>';
+        out += '</div>';
+        if (chart) out += chart;
       });
-
-      return html;
+      return out;
     }
 
-    // ── BUILD FULL ARTICLE HTML ─────────────────────────────────────────────
-    function buildArticle(art) {
-      const heroHtml = art.hero_src
-        ? `<div class="art-hero" style="aspect-ratio:16/9;overflow:hidden;"><img src="${art.hero_src}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"/></div>`
-        : `<div class="art-hero" style="aspect-ratio:16/9;background:#0a0a0f;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Playfair Display',serif;font-size:clamp(3.5rem,12vw,8rem);font-weight:900;color:rgba(255,255,255,0.06);letter-spacing:-0.04em;user-select:none;">manu.</span></div>`;
-
-      const sectionId = art.id === 'mainstream' ? 'article-section' : `article-section-${art.id}`;
-      const giscusTerm = art.giscus_term || art.card.title_en;
-
-      return `
-  <div id="${sectionId}">
-    <div class="article-wrapper">
-      <button class="article-back" onclick="toggleArticle('${art.id}')">
-        <span>&#8592;</span> <span data-ui="back_to_blog">back to blog</span>
-      </button>
-      <article class="reader-article">
-        ${heroHtml}
-        <header>
-          <span class="art-label" id="art-label-${art.id}"></span>
-          <h1 id="art-h1-${art.id}"></h1>
-          <p class="art-deck" id="art-deck-${art.id}"></p>
-        </header>
-        <div id="art-body-${art.id}"></div>
-        <p class="art-coda" id="art-coda-${art.id}"></p>
-        <p class="art-disclosure" data-ui="art_disclosure">AI disclosure: Conceptualized and written by me, re-structured and style polished by Claude Sonnet 4.6.</p>
-        <div class="art-comments">
-          <span class="comments-label" data-ui="comments_label">// responses</span>
-          <script src="https://giscus.app/client.js"
-            data-repo="deuxfoistrois/manusite"
-            data-repo-id="R_kgDORuCKdw"
-            data-category="General"
-            data-category-id="DIC_kwDORuCKd84C5Ddd"
-            data-mapping="specific"
-            data-term="${giscusTerm}"
-            data-strict="0"
-            data-reactions-enabled="1"
-            data-emit-metadata="0"
-            data-input-position="bottom"
-            data-theme="dark_tritanopia"
-            data-lang="en"
-            crossorigin="anonymous"
-            async>
-          <\/script>
-        </div>
-      </article>
-    </div>
-  </div>`;
+    function buildArticleHTML(art) {
+      var sid = art.id === 'mainstream' ? 'article-section' : 'article-section-' + art.id;
+      var hero = art.hero_src
+        ? '<div class="art-hero" style="aspect-ratio:16/9;overflow:hidden;"><img src="' + art.hero_src + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"></div>'
+        : '<div class="art-hero" style="aspect-ratio:16/9;background:#0a0a0f;display:flex;align-items:center;justify-content:center;"><span style="font-family:var(--display);font-size:clamp(3.5rem,12vw,8rem);font-weight:900;color:rgba(255,255,255,0.06);">manu.</span></div>';
+      return '<div id="' + sid + '">'
+           + '<div class="article-wrapper">'
+           + '<button class="article-back" onclick="toggleArticle(\'' + art.id + '\')">'
+           + '<span>&#8592;</span> <span data-ui="back_to_blog">back to blog</span>'
+           + '</button>'
+           + '<article class="reader-article">'
+           + hero
+           + '<header>'
+           + '<span class="art-label" id="art-label-' + art.id + '"></span>'
+           + '<h1 id="art-h1-' + art.id + '"></h1>'
+           + '<p class="art-deck" id="art-deck-' + art.id + '"></p>'
+           + '</header>'
+           + '<div id="art-body-' + art.id + '"></div>'
+           + '<p class="art-coda" id="art-coda-' + art.id + '"></p>'
+           + '<p class="art-disclosure" data-ui="art_disclosure">AI disclosure: Conceptualized and written by me.</p>'
+           + '<div class="art-comments" id="art-comments-' + art.id + '">'
+           + '<span class="comments-label" data-ui="comments_label">// responses</span>'
+           + '</div>'
+           + '</article>'
+           + '</div>'
+           + '</div>';
     }
 
-    // ── UPDATE ARTICLE TEXT FOR LANG ────────────────────────────────────────
+    function addGiscus(art) {
+      var container = document.getElementById('art-comments-' + art.id);
+      if (!container || container.querySelector('iframe')) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      s.setAttribute('data-repo',            'deuxfoistrois/manusite');
+      s.setAttribute('data-repo-id',         'R_kgDORuCKdw');
+      s.setAttribute('data-category',        'General');
+      s.setAttribute('data-category-id',     'DIC_kwDORuCKd84C5Ddd');
+      s.setAttribute('data-mapping',         'specific');
+      s.setAttribute('data-term',            art.giscus_term || art.card.title_en);
+      s.setAttribute('data-strict',          '0');
+      s.setAttribute('data-reactions-enabled','1');
+      s.setAttribute('data-emit-metadata',   '0');
+      s.setAttribute('data-input-position',  'bottom');
+      s.setAttribute('data-theme',           'dark_tritanopia');
+      s.setAttribute('data-lang',            'en');
+      s.setAttribute('crossorigin',          'anonymous');
+      s.async = true;
+      container.appendChild(s);
+    }
+
     function updateArticleText(art, lang) {
-      const l = lang;
-      const label = document.getElementById(`art-label-${art.id}`);
-      const h1    = document.getElementById(`art-h1-${art.id}`);
-      const deck  = document.getElementById(`art-deck-${art.id}`);
-      const body  = document.getElementById(`art-body-${art.id}`);
-      const coda  = document.getElementById(`art-coda-${art.id}`);
-      if (label) label.textContent = art.header[`label_${l}`] || art.header.label_en;
-      if (h1)    h1.innerHTML      = art.header[`h1_${l}`]    || art.header.h1_en;
-      if (deck)  deck.textContent  = art.header[`deck_${l}`]  || art.header.deck_en;
-      if (body)  body.innerHTML    = buildSectionContent(art, l);
-      if (coda)  coda.innerHTML    = art[`coda_${l}`]         || art.coda_en;
+      var label = document.getElementById('art-label-' + art.id);
+      var h1    = document.getElementById('art-h1-'    + art.id);
+      var deck  = document.getElementById('art-deck-'  + art.id);
+      var body  = document.getElementById('art-body-'  + art.id);
+      var coda  = document.getElementById('art-coda-'  + art.id);
+      if (label) label.textContent = art.header['label_' + lang] || art.header.label_en || '';
+      if (h1)    h1.innerHTML      = art.header['h1_'    + lang] || art.header.h1_en    || '';
+      if (deck)  deck.textContent  = art.header['deck_'  + lang] || art.header.deck_en  || '';
+      if (body)  body.innerHTML    = buildSectionContent(art, lang);
+      if (coda)  coda.innerHTML    = art['coda_' + lang]         || art.coda_en         || '';
     }
 
-    // ── SWITCH LANGUAGE ─────────────────────────────────────────────────────
     function switchLang(lang) {
       currentLang = lang;
-      // Update UI strings
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (ui[lang] && ui[lang][key]) el.innerHTML = ui[lang][key];
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if (ui[lang] && ui[lang][key] !== undefined) el.innerHTML = ui[lang][key];
       });
-      document.querySelectorAll('[data-ui]').forEach(el => {
-        const key = el.getAttribute('data-ui');
-        if (ui[lang] && ui[lang][key]) el.innerHTML = ui[lang][key];
+      document.querySelectorAll('[data-ui]').forEach(function(el) {
+        var key = el.getAttribute('data-ui');
+        if (ui[lang] && ui[lang][key] !== undefined) el.innerHTML = ui[lang][key];
       });
-      // Update cards
-      const grid = document.getElementById('posts-grid');
-      if (grid && window._articles) {
-        grid.innerHTML = ARTICLE_ORDER
-          .map(id => window._articles[id])
-          .filter(Boolean)
-          .map(art => buildCard(art, lang))
-          .join('');
-      }
-      // Update open articles
       if (window._articles) {
-        Object.values(window._articles).forEach(art => updateArticleText(art, lang));
+        var grid = document.getElementById('posts-grid');
+        grid.innerHTML = ARTICLE_ORDER
+          .map(function(id) { return window._articles[id]; })
+          .filter(Boolean)
+          .map(function(art) { return buildCard(art, lang); })
+          .join('');
+        Object.values(window._articles).forEach(function(art) { updateArticleText(art, lang); });
       }
-      // Toggle lang buttons
       document.getElementById('btn-en').classList.toggle('active', lang === 'en');
       document.getElementById('btn-es').classList.toggle('active', lang === 'es');
       document.documentElement.lang = lang;
     }
 
-    // ── TOGGLE ARTICLE ──────────────────────────────────────────────────────
     function toggleArticle(id) {
-      const sectionId = id === 'mainstream' ? 'article-section' : `article-section-${id}`;
-      const section = document.getElementById(sectionId);
-      const card    = document.getElementById(`card-${id}`);
+      var sid     = id === 'mainstream' ? 'article-section' : 'article-section-' + id;
+      var section = document.getElementById(sid);
+      var card    = document.getElementById('card-' + id);
       if (!section || !card) return;
-      const isOpen  = section.classList.contains('open');
-      document.querySelectorAll('[id^="article-section"]').forEach(s => s.classList.remove('open'));
-      document.querySelectorAll('.post-card').forEach(c => c.classList.remove('active'));
+      var isOpen  = section.classList.contains('open');
+      document.querySelectorAll('[id^="article-section"]').forEach(function(s) { s.classList.remove('open'); });
+      document.querySelectorAll('.post-card').forEach(function(c) { c.classList.remove('active'); });
       if (isOpen) {
         history.replaceState(null, '', window.location.pathname);
         document.getElementById('blog').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1119,78 +791,69 @@
         section.classList.add('open');
         card.classList.add('active');
         history.replaceState(null, '', '#' + id);
-        setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+        addGiscus(window._articles[id]);
+        setTimeout(function() { section.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
       }
     }
 
-    // ── LOAD ARTICLES ───────────────────────────────────────────────────────
-    async function loadArticles() {
-      window._articles = {};
-      const container = document.getElementById('articles-container');
-      const grid = document.getElementById('posts-grid');
-
-      await Promise.all(ARTICLE_ORDER.map(async (id) => {
-        try {
-          const res = await fetch(`content/articles/${id}.json`);
-          const art = await res.json();
-          window._articles[id] = art;
-          // Inject article section
-          const div = document.createElement('div');
-          div.innerHTML = buildArticle(art);
-          container.appendChild(div.firstElementChild);
-          // Set initial text
-          updateArticleText(art, currentLang);
-        } catch(e) {
-          console.error(`Failed to load ${id}:`, e);
-        }
-      }));
-
-      // Render cards in order
+    function onAllLoaded() {
+      var grid = document.getElementById('posts-grid');
       grid.innerHTML = ARTICLE_ORDER
-        .map(id => window._articles[id])
+        .map(function(id) { return window._articles[id]; })
         .filter(Boolean)
-        .map(art => buildCard(art, currentLang))
+        .map(function(art) { return buildCard(art, currentLang); })
         .join('');
-
-      // Handle hash on load
-      const hash = window.location.hash.replace('#', '');
+      var hash = window.location.hash.replace('#', '');
       if (hash && window._articles[hash]) {
-        const sectionId = hash === 'mainstream' ? 'article-section' : `article-section-${hash}`;
-        const section = document.getElementById(sectionId);
-        const card    = document.getElementById(`card-${hash}`);
-        if (section && card) {
-          section.classList.add('open');
+        var sid  = hash === 'mainstream' ? 'article-section' : 'article-section-' + hash;
+        var sect = document.getElementById(sid);
+        var card = document.getElementById('card-' + hash);
+        if (sect && card) {
+          sect.classList.add('open');
           card.classList.add('active');
-          setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+          addGiscus(window._articles[hash]);
+          setTimeout(function() { sect.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
         }
       }
     }
 
-    // ── INIT ────────────────────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-      // Nav scroll
-      const nav = document.getElementById('nav');
-      window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+    function loadArticles() {
+      window._articles = {};
+      var container = document.getElementById('articles-container');
+      var loaded = 0;
+      ARTICLE_ORDER.forEach(function(id) {
+        fetch('content/articles/' + id + '.json')
+          .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+          .then(function(art) {
+            window._articles[id] = art;
+            var wrap = document.createElement('div');
+            wrap.innerHTML = buildArticleHTML(art);
+            container.appendChild(wrap.firstElementChild);
+            updateArticleText(art, currentLang);
+          })
+          .catch(function(e) { console.error('Failed:', id, e); })
+          .finally(function() { if (++loaded === ARTICLE_ORDER.length) onAllLoaded(); });
+      });
+    }
 
-      // Fade-in observer
-      const observer = new IntersectionObserver(
-        (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
-        { threshold: 0.1 }
-      );
-      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-      // Smooth scroll
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-          const href = this.getAttribute('href');
+    document.addEventListener('DOMContentLoaded', function() {
+      var nav = document.getElementById('nav');
+      window.addEventListener('scroll', function() {
+        nav.classList.toggle('scrolled', window.scrollY > 50);
+      });
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.fade-in').forEach(function(el) { obs.observe(el); });
+      document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+        a.addEventListener('click', function(e) {
+          var href = this.getAttribute('href');
           if (href === '#') return;
           e.preventDefault();
-          const target = document.querySelector(href);
-          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          var t = document.querySelector(href);
+          if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       });
-
-      // Load all articles
       loadArticles();
     });
   </script>
