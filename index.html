@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manu — Ideas &amp; Media Theories</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-raised: #111116;
+      --bg-card: #141419;
+      --border: #1e1e24;
+      --border-hover: #2a2a32;
+      --text: #e8e8ed;
+      --text-muted: #9898a2;
+      --text-dim: #6e6e78;
+      --accent: #d0d0d8;
+      --accent-bright: #e8e8ed;
+      --gradient-1: #e8e8ed;
+      --gradient-2: #808088;
+      --red: #c0392b;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --display: 'Space Grotesk', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: #e8e8ed; color: #0a0a0f; }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    nav.scrolled { border-bottom-color: var(--border); }
+
+    .nav-logo {
+      font-family: var(--display); font-size: 1.1rem; font-weight: 600;
+      letter-spacing: -0.02em; color: var(--text); text-decoration: none;
+    }
+    .nav-logo span { color: var(--red); }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--mono); font-size: 0.8rem; color: var(--text-muted);
+      text-decoration: none; letter-spacing: 0.05em; text-transform: lowercase;
+      transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: var(--accent-bright);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ---- HERO ---- */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      justify-content: center; padding: 8rem 2rem 4rem;
+      max-width: 900px; margin: 0 auto; position: relative;
+    }
+    .hero-label {
+      font-family: var(--mono); font-size: 0.8rem; color: var(--red);
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeUp 0.6s ease forwards;
+    }
+    .hero h1 {
+      font-family: var(--display); font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 700; line-height: 1.1; letter-spacing: -0.03em;
+      margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-description {
+      font-size: 1.15rem; color: var(--text-muted); max-width: 560px;
+      line-height: 1.8; margin-bottom: 2.5rem;
+      opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem;
+      opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards;
+    }
+    .btn {
+      font-family: var(--mono); font-size: 0.8rem; padding: 0.75rem 1.5rem;
+      border-radius: 6px; text-decoration: none; letter-spacing: 0.03em;
+      transition: all 0.2s ease; cursor: pointer; border: none; display: inline-block;
+    }
+    .btn-primary { background: #e8e8ed; color: #0a0a0f; }
+    .btn-primary:hover { background: #fff; box-shadow: 0 0 30px rgba(255,255,255,0.08); transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-hover); background: var(--bg-raised); }
+
+    .hero::before {
+      content: ''; position: absolute; top: 20%; right: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ---- SECTIONS ---- */
+    section { max-width: 900px; margin: 0 auto; padding: 6rem 2rem; }
+    .section-header { margin-bottom: 3rem; }
+    .section-label {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--red);
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .section-title { font-family: var(--display); font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; }
+    .divider { width: 100%; height: 1px; background: var(--border); max-width: 900px; margin: 0 auto; }
+
+    /* ---- ABOUT ---- */
+    .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+    .about-text p { color: var(--text-muted); margin-bottom: 1.25rem; font-size: 1.05rem; }
+    .about-text p:first-child { color: var(--text); }
+    .about-meta { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+    .about-meta h3 {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim);
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.25rem;
+    }
+    .interest-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.75rem; padding: 0.4rem 0.8rem;
+      border-radius: 20px; background: var(--bg-raised); border: 1px solid var(--border);
+      color: var(--text-muted); transition: all 0.2s;
+    }
+    .tag:hover { border-color: var(--border-hover); color: var(--text); }
+    .status-line { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: pulse 2s ease infinite; }
+
+    /* ---- BLOG ---- */
+    .posts-grid {
+      display: flex; flex-direction: column; gap: 1px;
+      background: var(--border); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .post-card {
+      background: var(--bg-card); padding: 2rem;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 1rem; align-items: start;
+      text-decoration: none; color: inherit;
+      transition: background 0.2s; cursor: pointer;
+      border: none; width: 100%; text-align: left;
+    }
+    .post-card:hover { background: var(--bg-raised); }
+    .post-card:hover .post-title { color: var(--accent-bright); }
+    .post-card.active { background: var(--bg-raised); }
+    .post-card.active .post-title { color: var(--accent-bright); }
+    .post-card.active .post-arrow { transform: rotate(90deg); color: var(--accent-bright); }
+    .post-tag {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--red);
+      letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .post-title { font-family: var(--display); font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 0.5rem; transition: color 0.2s; }
+    .post-excerpt { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+    .post-date { font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim); white-space: nowrap; padding-top: 0.25rem; }
+    .post-arrow { color: var(--text-dim); transition: all 0.3s; margin-top: 0.25rem; display: inline-block; }
+    .post-card:hover .post-arrow { color: var(--accent-bright); }
+
+    /* ---- ARTICLE (inline, below blog) ---- */
+    [id^="article-section"] {
+      max-width: 900px;
+      margin: 0 auto;
+      /* hidden by default */
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    [id^="article-section"].open {
+      max-height: none;
+      overflow: visible;
+      opacity: 1;
+    }
+
+    .article-wrapper {
+      border-top: 1px solid var(--border);
+      padding: 0 2rem 6rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Back link */
+    .article-back {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-dim);
+      background: none; border: none; cursor: pointer;
+      padding: 1.5rem 0; transition: color 0.2s;
+    }
+    .article-back:hover { color: var(--red); }
+    .article-back span { transition: transform 0.2s; display: inline-block; }
+    .article-back:hover span { transform: translateX(-3px); }
+
+    /* Article typography — dark-adapted */
+    .reader-article {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      font-size: 18px;
+      color: var(--text-muted);
+      background: transparent;
+    }
+
+    .reader-article .art-hero {
+      position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #1a1a1a;
+      border-radius: 6px; margin-bottom: 0;
+    }
+    .reader-article .art-hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; display: block; }
+    .reader-article .art-hero-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.6); padding: 0.55rem 1rem;
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5);
+    }
+
+    .reader-article header {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+    .reader-article .art-label {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 1.2rem; display: block;
+    }
+    .reader-article h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 7vw, 4rem);
+      font-weight: 900; line-height: 0.95; letter-spacing: -0.02em;
+      margin-bottom: 1.5rem; color: var(--text);
+    }
+    .reader-article h1 em { font-style: italic; color: var(--red); }
+    .reader-article .art-deck {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.1rem; color: var(--text-dim); line-height: 1.5; max-width: 580px;
+    }
+
+    .reader-article .art-content { padding: 0; }
+    .reader-article .art-content p { margin-bottom: 1.4rem; font-size: 1rem; color: var(--text-muted); }
+    .reader-article .art-content p:last-child { margin-bottom: 0; }
+    .reader-article .art-content strong { font-weight: 500; color: var(--text); }
+
+    .reader-article .art-pullquote {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.35rem; line-height: 1.4; color: var(--text);
+      border-left: 3px solid var(--red);
+      padding: 0.8rem 0 0.8rem 1.5rem; margin: 2.5rem 0;
+    }
+
+    .reader-article h2 {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim);
+      margin: 3rem 0 1rem; padding-top: 2.5rem; border-top: 1px solid var(--border);
+    }
+
+    .reader-article .art-table-wrap { margin: 2rem 0; overflow-x: auto; }
+    .reader-article table { width: 100%; border-collapse: collapse; font-family: 'DM Mono', monospace; font-size: 0.72rem; }
+    .reader-article thead tr { border-bottom: 1px solid var(--border-hover); }
+    .reader-article th { font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; text-align: left; padding: 0.5rem 0.8rem 0.5rem 0; color: var(--text-dim); }
+    .reader-article td { padding: 0.55rem 0.8rem 0.55rem 0; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text-muted); }
+    .reader-article tr.hl td { font-weight: 500; color: var(--red); }
+
+    .reader-article .art-cases { list-style: none; margin: 1.5rem 0; }
+    .reader-article .art-cases li {
+      display: flex; gap: 1rem; padding: 1rem 0;
+      border-bottom: 1px solid var(--border); font-size: 0.95rem; align-items: flex-start; color: var(--text-muted);
+    }
+    .reader-article .art-cases li:first-child { border-top: 1px solid var(--border); }
+    .reader-article .case-name {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.05em; color: var(--red); min-width: 150px;
+      padding-top: 0.15rem; text-transform: uppercase; line-height: 1.4;
+    }
+
+    .reader-article .art-definition {
+      background: var(--bg-raised); border: 1px solid var(--border);
+      border-left: 3px solid var(--red);
+      padding: 2rem; margin: 2.5rem 0;
+    }
+    .reader-article .art-definition .def-label {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--red);
+      margin-bottom: 0.8rem; display: block;
+    }
+    .reader-article .art-definition p {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.05rem; line-height: 1.65; color: var(--text-muted); margin-bottom: 0;
+    }
+    .reader-article .art-definition strong { font-style: normal; color: var(--text); }
+
+    .reader-article .art-coda {
+      margin: 3.5rem 0 0; padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.05rem; color: var(--text-dim); line-height: 1.6;
+    }
+    .reader-article .art-disclosure {
+      margin: 2rem 0 3rem;
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.08em; color: var(--text-dim); line-height: 1.6;
+    }
+
+    /* ---- COMMENTS ---- */
+    .art-comments {
+      margin-top: 3rem; padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .art-comments .comments-label {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 1.5rem; display: block;
+    }
+
+    /* ---- FRAMEWORK CHART ---- */
+    .art-framework-chart { margin: 2.5rem 0; overflow-x: auto; }
+    .art-framework-chart table {
+      width: 100%; border-collapse: collapse;
+      font-family: 'DM Mono', monospace; font-size: 0.64rem;
+    }
+    .art-framework-chart thead tr { border-bottom: 1px solid var(--border-hover); }
+    .art-framework-chart th {
+      padding: 0.5rem 0.75rem 0.5rem 0; text-transform: uppercase;
+      letter-spacing: 0.12em; font-weight: 500; color: var(--text-dim);
+      text-align: left; font-size: 0.58rem;
+    }
+    .art-framework-chart th.act1-head { color: var(--red); letter-spacing: 0.15em; }
+    .art-framework-chart td {
+      padding: 0.45rem 0.75rem 0.45rem 0; border-bottom: 1px solid var(--border);
+      color: var(--text-dim); vertical-align: top; line-height: 1.45;
+    }
+    .art-framework-chart td.theorist {
+      white-space: nowrap; padding-right: 1.5rem;
+      opacity: 0.55; font-size: 0.58rem;
+    }
+    .art-framework-chart td.act1 { color: var(--text); }
+    .art-framework-chart .chart-note {
+      margin-top: 0.75rem; font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.06em; color: var(--text-dim); opacity: 0.5; line-height: 1.5;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      max-width: 900px; margin: 0 auto; padding: 4rem 2rem;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-family: var(--mono); font-size: 0.8rem; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-family: var(--mono); font-size: 0.8rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent-bright); }
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 700px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { gap: 1.25rem; }
+      .hero { padding: 7rem 1.25rem 3rem; }
+      section { padding: 4rem 1.25rem; }
+      .about-content { grid-template-columns: 1fr; gap: 2rem; }
+      .post-card { grid-template-columns: 1fr; }
+      .post-date { order: -1; }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .hero-cta { flex-direction: column; }
+      .btn { text-align: center; }
+      .reader-article header,
+      .reader-article .art-content,
+      .reader-article .art-coda,
+      .reader-article .art-disclosure { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .reader-article .art-cases li { flex-direction: column; gap: 0.4rem; }
+      .reader-article .case-name { min-width: unset; }
+    }
+
+    /* Language Toggle */
+    .lang-toggle { display: flex; align-items: center; gap: 0.3rem; margin-left: 1.5rem; }
+    .lang-btn { background: none; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.3); cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; padding: 0.2rem 0.45rem; border-radius: 2px; transition: all 0.2s; text-transform: uppercase; }
+    .lang-btn.active { border-color: #c0392b; color: #c0392b; }
+    .lang-btn:hover:not(.active) { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.55); }
+  
+    /* Subscribe section */
+    .subscribe-wrap { max-width: 520px; }
+    .subscribe-desc { color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem; }
+    .subscribe-form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .subscribe-form input[type="email"] {
+      flex: 1; min-width: 220px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.65rem 1rem;
+      color: var(--text); font-family: var(--mono); font-size: 0.85rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .subscribe-form input[type="email"]:focus { border-color: var(--border-hover); }
+    .subscribe-form input[type="email"]::placeholder { color: var(--text-dim); }
+    .subscribe-form button {
+      background: var(--text); color: var(--bg);
+      border: none; border-radius: 4px; padding: 0.65rem 1.4rem;
+      font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.08em;
+      text-transform: uppercase; cursor: pointer; transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .subscribe-form button:hover { background: #fff; }
+    .subscribe-confirm { display: none; font-family: var(--mono); font-size: 0.85rem;
+      color: var(--red); margin-top: 1rem; }
+
+    /* ---- CHARTS ---- */
+    .art-chart-block { background:#0d0d12; border:1px solid var(--border); border-radius:8px; padding:24px 28px; margin:2.5rem 0; }
+    .art-lede { font-size: 1.05rem; line-height: 1.75; color: var(--text-muted); font-style: italic; border-left: 3px solid var(--border); padding-left: 1.25rem; margin-bottom: 2.5rem; }
+    .chart-section-label { font-family:var(--mono); font-size:0.62rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:16px; }
+    .chart-subsection-label { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin:20px 0 12px; border-top:1px solid var(--border); padding-top:16px; }
+    .chart-stat-grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:22px; }
+    .chart-stat-grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:22px; }
+    @media(max-width:600px){ .chart-stat-grid4,.chart-stat-grid3{ grid-template-columns:repeat(2,1fr); } }
+    .chart-stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:14px 16px; }
+    .chart-stat-desc { font-size:0.66rem; color:var(--text-dim); line-height:1.4; margin-bottom:8px; }
+    .chart-stat-value { font-family:var(--display); font-size:1.75rem; font-weight:700; color:var(--text); line-height:1; margin-bottom:4px; }
+    .chart-stat-sub { font-size:0.62rem; color:var(--text-muted); line-height:1.4; }
+    .chart-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+    .chart-bar-label { font-size:0.68rem; color:var(--text-muted); width:210px; flex-shrink:0; line-height:1.3; }
+    .chart-bar-label-sm { font-size:0.66rem; color:var(--text-muted); margin-bottom:4px; line-height:1.3; }
+    .chart-bar-track { flex:1; height:22px; background:#1a1a22; border-radius:3px; overflow:hidden; }
+    .chart-bar-fill { height:100%; display:flex; align-items:center; padding-left:8px; border-radius:3px; min-width:28px; }
+    .chart-bar-val { font-family:var(--mono); font-size:0.68rem; font-weight:600; color:#fff; }
+    .cb-purple { background:#7c6af7; }
+    .cb-green { background:#34d399; }
+    .cb-red { background:#f87171; }
+    .cb-gray { background:#3d3d50; }
+    .cb-amber { background:#fb923c; }
+    .chart-legend { display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; }
+    .chart-legend-item { display:flex; align-items:center; gap:6px; font-size:0.62rem; color:var(--text-muted); }
+    .chart-legend-dot { width:9px; height:9px; border-radius:2px; flex-shrink:0; }
+    .chart-callout { background:#1a1a22; border-left:3px solid #3d3d50; border-radius:0 6px 6px 0; padding:12px 16px; margin:16px 0; font-size:0.77rem; color:var(--text-muted); line-height:1.6; font-style:italic; }
+    .chart-source { font-family:var(--mono); font-size:0.57rem; color:var(--text-dim); margin-top:16px; line-height:1.7; border-top:1px solid var(--border); padding-top:12px; }
+    .chart-gen-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+    @media(max-width:600px){ .chart-gen-grid{ grid-template-columns:1fr; } }
+    .chart-gen-card { background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:14px; }
+    .chart-gen-title { font-size:0.72rem; font-weight:600; color:var(--text); margin-bottom:10px; }
+    .chart-gen-metric { font-size:0.62rem; color:var(--text-dim); margin-bottom:3px; }
+    .chart-gen-val-p { font-family:var(--mono); font-size:0.95rem; font-weight:600; color:#7c6af7; margin-bottom:9px; }
+    .chart-gen-val-g { font-family:var(--mono); font-size:0.95rem; font-weight:600; color:#34d399; margin-bottom:9px; }
+    .chart-gen-val-m { font-family:var(--mono); font-size:0.95rem; font-weight:600; color:#9898a2; margin-bottom:9px; }
+    .chart-split { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+    @media(max-width:600px){ .chart-split{ grid-template-columns:1fr; } }
+    .chart-split-panel { background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:14px 16px; }
+    .chart-split-title { font-size:0.68rem; font-weight:600; color:var(--text-muted); margin-bottom:12px; }
+    .chart-big-callout { background:#141428; border:1px solid #2a2a50; border-radius:6px; padding:16px 20px; margin:14px 0; }
+    .chart-big-callout-val { font-family:var(--display); font-size:1.8rem; font-weight:700; color:#7c6af7; margin-bottom:6px; }
+    .chart-big-callout-text { font-size:0.73rem; color:var(--text-muted); line-height:1.6; }
+    .chart-mini-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px; }
+    @media(max-width:600px){ .chart-mini-grid{ grid-template-columns:repeat(2,1fr); } }
+    .chart-mini-card { background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:12px; text-align:center; }
+    .chart-mini-val { font-family:var(--display); font-size:1.3rem; font-weight:700; color:var(--text); margin-bottom:5px; }
+    .chart-mini-desc { font-size:0.6rem; color:var(--text-dim); line-height:1.5; }
+    .chart-indicator-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+    @media(max-width:600px){ .chart-indicator-grid{ grid-template-columns:1fr; } }
+    .chart-indicator-card { background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:14px; }
+    .chart-indicator-dot { width:8px; height:8px; border-radius:50%; margin-bottom:8px; }
+    .chart-indicator-cat { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; }
+    .chart-indicator-headline { font-size:0.76rem; font-weight:600; color:var(--text); margin-bottom:8px; line-height:1.4; }
+    .chart-indicator-body { font-size:0.66rem; color:var(--text-muted); line-height:1.55; }
+    .chart-timeline { position:relative; display:flex; justify-content:space-between; margin:14px 0 18px; padding-top:20px; }
+    .chart-timeline::before { content:''; position:absolute; top:24px; left:0; right:0; height:1px; background:var(--border); }
+    .chart-timeline-point { display:flex; flex-direction:column; align-items:center; flex:1; text-align:center; padding:0 4px; }
+    .chart-timeline-dot { width:9px; height:9px; border-radius:50%; background:#7c6af7; margin-top:-4px; margin-bottom:10px; z-index:1; flex-shrink:0; }
+    .chart-timeline-year { font-family:var(--mono); font-size:0.62rem; font-weight:600; color:var(--text-muted); margin-bottom:5px; }
+    .chart-timeline-label { font-size:0.58rem; color:var(--text-dim); line-height:1.4; }
+    .chart-gdp-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .chart-gdp-label { font-size:0.7rem; color:var(--text-muted); width:110px; flex-shrink:0; }
+    .chart-gdp-track { flex:1; height:26px; background:#1a1a22; border-radius:3px; overflow:hidden; }
+    .chart-gdp-fill { height:100%; display:flex; align-items:center; padding:0 10px; border-radius:3px; }
+    .chart-gdp-val { font-family:var(--mono); font-size:0.7rem; font-weight:600; color:#fff; }
+    .chart-gap-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+    @media(max-width:600px){ .chart-gap-grid{ grid-template-columns:1fr; } }
+    .chart-gap-card { background:#180f0a; border:1px solid #2a1a0e; border-radius:6px; padding:14px; }
+    .chart-gap-val { font-family:var(--display); font-size:1.45rem; font-weight:700; color:#fb923c; margin-bottom:6px; }
+    .chart-gap-text { font-size:0.65rem; color:var(--text-muted); line-height:1.6; }
+
+    
+  </style>
+</head>
+<body>
+
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">manu<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about" data-i18n="nav_about">about</a></li>
+      <li><a href="#blog" data-i18n="nav_blog">blog</a></li>
+      <li><a href="mailto:mailmanu@gmail.com" data-i18n="nav_contact">contact</a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="switchLang('en')" id="btn-en">EN</button>
+      <button class="lang-btn" onclick="switchLang('es')" id="btn-es">ES</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-label" data-i18n="hero_label">creative lab</div>
+    <h1 data-i18n="hero_h1">
+      Ideas at the edge of<br>
+      <span class="gradient-text">media &amp; culture</span>
+    </h1>
+    <p class="hero-description" data-i18n="hero_description">
+      A space for developing theories about how media shapes perception,
+      culture moves through technology, and new forms of expression emerge
+      from the collision of both.
+    </p>
+    <div class="hero-cta">
+      <a href="#blog" class="btn btn-primary" data-i18n="hero_cta_primary">read the latest</a>
+      <a href="#about" class="btn btn-ghost" data-i18n="hero_cta_ghost">about me</a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ABOUT -->
+  <section id="about" class="fade-in">
+    <div class="section-header">
+      <div class="section-label">// 01</div>
+      <h2 class="section-title" data-i18n="about_title">About</h2>
+    </div>
+    <div class="about-content">
+      <div class="about-text">
+        <p data-i18n="about_p1">I'm Manu — a producer. I've worked inside production companies and media corporations across American, European, and latam markets. Originally trained as an architect, I moved through design and direction before landing in the part of the industry where technology, content, and business models collide. This site is where I try to write about that.</p>
+        <p data-i18n="about_p2">Most of my work lives in the gap between how the industry thinks storytelling works and how it actually behaves once something is made and released. I've spent years watching formats that traditional media dismissed as novelties turn into the fastest-growing segments in entertainment — and trying to build language for what's happening before the industry catches up.</p>
+        <p data-i18n="about_p3">This site is the working notebook. The ideas here are in progress, not polished positions. Some will turn into something. Some will get dismantled by the next thing I read. That's the point.</p>
+      </div>
+      <div class="about-meta">
+        <img src="assets/about.jpeg" alt="Manu" style="width:100%;height:300px;object-fit:cover;object-position:center 28%;border-radius:12px;margin-bottom:1.5rem;filter:grayscale(20%);display:block;">
+        <h3 data-i18n="interests_title">Interests</h3>
+        <div class="interest-tags">
+          <span class="tag" data-i18n="tag_media_theory">media theory</span>
+          <span class="tag" data-i18n="tag_digital_culture">digital culture</span>
+          <span class="tag" data-i18n="tag_film">film</span>
+          <span class="tag" data-i18n="tag_algorithms">algorithms</span>
+          <span class="tag" data-i18n="tag_attention">attention</span>
+          <span class="tag" data-i18n="tag_storytelling">storytelling</span>
+          <span class="tag" data-i18n="tag_technology">technology</span>
+          <span class="tag" data-i18n="tag_aesthetics">aesthetics</span>
+        </div>
+        <h3 data-i18n="status_title">Status</h3>
+        <div class="status-line">
+          <span class="status-dot"></span>
+          <span data-i18n="status_text">Currently exploring new ideas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- BLOG -->
+  <section id="blog" class="fade-in">
+    <div class="section-header">
+      <div class="section-label">// 02</div>
+      <h2 class="section-title" data-i18n="blog_title">Blog</h2>
+    </div>
+
+  <!-- BLOG SECTION -->
+  <section id="blog" class="section fade-in">
+    <div class="section-header">
+      <span class="section-num">// 02</span>
+      <h2 class="section-title" data-i18n="blog_title">Blog</h2>
+    </div>
+    <div class="posts-grid" id="posts-grid">
+      <!-- Cards injected by JS -->
+    </div>
+  </section>
+
+  <!-- ARTICLES injected by JS -->
+  <div id="articles-container"></div>
+
+  <!-- SUBSCRIBE -->
+  <div class="divider fade-in"></div>
+  <section id="subscribe" class="fade-in">
+    <div class="section-header">
+      <div class="section-label">// 03</div>
+      <h2 class="section-title" data-i18n="subscribe_title">Newsletter</h2>
+    </div>
+    <div class="subscribe-wrap">
+      <p class="subscribe-desc" data-i18n="subscribe_desc">New articles, straight to your inbox. No noise, no frequency commitment.</p>
+      <form
+        action="https://buttondown.com/api/emails/embed-subscribe/deuxfoistrois"
+        method="post"
+        target="popupwindow"
+        onsubmit="window.open('https://buttondown.com/deuxfoistrois','popupwindow'); return true;"
+        class="subscribe-form"
+      >
+        <input type="email" name="email" placeholder="your@email.com" data-i18n-placeholder="subscribe_placeholder" required />
+        <button type="submit" data-i18n="subscribe_btn">subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left" data-i18n="footer_copy">&copy; 2026 Manu</div>
+    <div class="footer-links">
+      <a href="mailto:mailmanu@gmail.com">email</a>
+      <a href="#">twitter</a>
+      <a href="#">are.na</a>
+    </div>
+  </footer>
+
+  <script>
+    // ── i18n Translation System ────────────────────────────────────────────
+    let currentLang = 'en';
+
+    const translations = {
+      en: {
+        nav_about: 'about',
+        nav_blog: 'blog',
+        nav_contact: 'contact',
+
+        hero_label: 'creative lab',
+        hero_h1: 'Ideas at the edge of<br><span class="gradient-text">media &amp; culture</span>',
+        hero_description: 'A space for developing theories about how media shapes perception, culture moves through technology, and new forms of expression emerge from the collision of both.',
+        hero_cta_primary: 'read the latest',
+        hero_cta_ghost: 'about me',
+
+        about_title: 'About',
+        about_p1: "I'm Manu — a producer. I've worked inside production companies and media corporations across American, European, and latam markets. Originally trained as an architect, I moved through design and direction before landing in the part of the industry where technology, content, and business models collide. This site is where I try to write about that.",
+        about_p2: "Most of my work lives in the gap between how the industry thinks storytelling works and how it actually behaves once something is made and released. I've spent years watching formats that traditional media dismissed as novelties turn into the fastest-growing segments in entertainment — and trying to build language for what's happening before the industry catches up.",
+        about_p3: "This site is the working notebook. The ideas here are in progress, not polished positions. Some will turn into something. Some will get dismantled by the next thing I read. That's the point.",
+
+        interests_title: 'Interests',
+        tag_media_theory: 'media theory',
+        tag_digital_culture: 'digital culture',
+        tag_film: 'film',
+        tag_algorithms: 'algorithms',
+        tag_attention: 'attention',
+        tag_storytelling: 'storytelling',
+        tag_technology: 'technology',
+        tag_aesthetics: 'aesthetics',
+
+        status_title: 'Status',
+        status_text: 'Currently exploring new ideas',
+
+        blog_title: 'Blog',
+
+        card_tag_engines: 'media theory',
+        card_title_engines: 'The Two Engines',
+        card_excerpt_engines: 'Every storytelling framework from Aristotle to Blake Snyder agrees on Act I. Streaming finally found a way to measure what it was worth.',
+
+        card_tag_iap: 'opinion · media industry',
+        card_title_iap: 'Narrative IAP',
+        card_excerpt_iap: 'How vertical microdramas built a $26 billion industry by selling the one thing streaming never could — the compulsion to know what happens next.',
+
+        card_tag_mainstream: 'digital culture',
+        card_title_mainstream: 'Mainstream Niche',
+        card_excerpt_mainstream: "Why the biggest stars you've never heard of are telling us everything about how media actually works now.",
+
+        card_tag_flatness: 'aesthetics',
+        card_title_flatness: 'Notes on the New Flatness',
+        card_excerpt_flatness: 'From corporate Memphis to AI-generated imagery — tracing the visual homogenization of the internet and what it reveals about our collective imagination.',
+
+        back_to_blog: 'back to blog',
+
+        art_label_mainstream: 'Digital Culture',
+        art_h1_mainstream: 'Mainstream<br><em>Niche</em>',
+        art_deck_mainstream: "Why the biggest stars you've never heard of are telling us everything about how media actually works now.",
+
+        art_label_iap: 'Opinion · Media Industry',
+        art_h1_iap: 'Narrative<br><em>IAP</em>',
+        art_deck_iap: 'How vertical microdramas built a $26 billion industry by selling the one thing streaming never could — the compulsion to know what happens next.',
+
+        art_label_engines: 'Media Theory',
+        art_h1_engines: 'The Two<br><em>Engines</em>',
+        art_deck_engines: 'Every storytelling framework from Aristotle to Blake Snyder agrees on Act I. Streaming finally found a way to measure what it was worth.',
+
+        art_label_flatness: 'Aesthetics',
+        art_h1_flatness: 'Notes on the<br><em>New Flatness</em>',
+        art_deck_flatness: 'From corporate Memphis to AI-generated imagery — tracing the visual homogenization of the internet and what it reveals about how design decisions get made at scale.',
+
+        coda_mainstream: "The question worth sitting with: if scale no longer produces legibility, what does legibility even mean now — and who still needs it?",
+        coda_iap: "The question worth sitting with: if the cliffhanger is now a product feature rather than a storytelling choice, what does that mean for the writers who've spent careers learning to write them?",
+
+        card_tag_englishlatino: 'u.s. latino · media strategy',
+        card_title_englishlatino: "You're Talking to the Wrong Latino",
+        card_excerpt_englishlatino: "Why the U.S. Hispanic market is not who the industry thinks it is &#8212; and what a $3.78 trillion audience actually looks like.",
+
+        art_label_englishlatino: 'U.S. Latino · Media Strategy',
+        art_h1_englishlatino: "You're Talking to the<br><em>Wrong Latino</em>",
+        art_deck_englishlatino: "Why the U.S. Hispanic market is not who the industry thinks it is &#8212; and what a $3.78 trillion audience actually looks like.",
+
+        coda_englishlatino: 'The industry has a name for the audience it needs to reach. It keeps calling it "the Hispanic market." That audience has its own name: American.',
+
+        card_tag_freelunch: 'media industry · business models',
+        card_title_freelunch: 'The Free Lunch Bill',
+        card_excerpt_freelunch: 'For two decades, Meta and YouTube perfected the art of monetizing other people\'s work. The model made them dominant. The model also has a ceiling.',
+
+        art_label_freelunch: 'Media Industry · Business Models',
+        art_h1_freelunch: 'The Free<br><em>Lunch Bill</em>',
+        art_deck_freelunch: 'For two decades, Meta and YouTube perfected the art of monetizing other people\'s work. The model made them dominant. But it also had a ceiling.',
+
+        coda_freelunch: 'The lunch was never really free. Someone always paid. The interesting question is whether that\'s about to become visible on the balance sheet.',
+
+        art_disclosure: 'AI disclosure: Conceptualized and written by me, re-structured and style polished by Claude Sonnet 4.6.',
+        art_disclosure2: 'AI disclosure: Conceptualized and written by me, structured and style polished by Claude Sonnet 4.6.',
+
+
+        subscribe_title: 'Newsletter',
+        subscribe_desc: 'New articles, straight to your inbox. No noise, no frequency commitment.',
+        subscribe_placeholder: 'your@email.com',
+        subscribe_btn: 'subscribe',
+        comments_label: '// responses',
+        footer_copy: '&copy; 2026 Manu',
+      },
+
+      es: {
+        nav_about: 'sobre mí',
+        nav_blog: 'blog',
+        nav_contact: 'contacto',
+
+        hero_label: 'Creative Lab',
+        hero_h1: 'Ideas en el límite entre<br><span class="gradient-text">los medios y la cultura</span>',
+        hero_description: 'Un espacio para pensar cómo los medios moldean la percepción, cómo la cultura circula a través de la tecnología y cómo, en el cruce entre ambas, aparecen nuevas formas de expresión.',
+        hero_cta_primary: 'leer lo último',
+        hero_cta_ghost: 'sobre mí',
+
+        about_title: 'Sobre mí',
+        about_p1: 'Soy Manu, productor. Pasé años dentro de productoras y corporaciones de medios en mercados de América, Europa y Latinoamérica. Me formé como arquitecto, después pasé por el diseño y la dirección, y terminé en esa zona de la industria donde se cruzan tecnología, contenido y modelos de negocio. De eso escribo acá.',
+        about_p2: 'La mayor parte de lo que hago ocurre en la grieta entre cómo la industria cree que funciona el storytelling y cómo funciona de verdad cuando algo se hace, circula y encuentra audiencia. Pasé años viendo cómo formatos que los medios tradicionales descartaban como una novedad pasajera terminaban convirtiéndose en los segmentos de mayor crecimiento del entretenimiento, y tratando de ponerles nombre a fenómenos que la industria todavía no alcanza a leer.',
+        about_p3: 'Este sitio funciona como cuaderno de trabajo. Las ideas que aparecen acá están en proceso, no son posiciones cerradas. Algunas van a convertirse en algo. Otras van a quedar desarmadas por lo próximo que lea.',
+
+        interests_title: 'Intereses',
+        tag_media_theory: 'media theory',
+        tag_digital_culture: 'cultura digital',
+        tag_film: 'cine',
+        tag_algorithms: 'algoritmos',
+        tag_attention: 'atención',
+        tag_storytelling: 'narrativa',
+        tag_technology: 'tecnología',
+        tag_aesthetics: 'estética',
+
+        status_title: 'Estado',
+        status_text: 'Explorando ideas nuevas',
+
+        blog_title: 'Blog',
+
+        card_tag_engines: 'media theory',
+        card_title_engines: 'Los Dos Motores',
+        card_excerpt_engines: 'Todos los frameworks narrativos, de Aristóteles a Blake Snyder, arrancan igual. El streaming, por fin, permitió medir su verdadero valor.',
+
+        card_tag_iap: 'media industry',
+        card_title_iap: 'Narrative IAP',
+        card_excerpt_iap: 'Cómo los microdramas verticales construyeron una industria de USD 26 mil millones vendiendo lo único que el streaming nunca pudo ofrecer: la compulsión de saber qué pasa después.',
+
+        card_tag_mainstream: 'cultura digital',
+        card_title_mainstream: 'Mainstream Niche',
+        card_excerpt_mainstream: 'Por qué las estrellas más exitosas de las que nunca escuchaste hablar dicen todo sobre el funcionamiento actual de los mass media.',
+
+        card_tag_flatness: 'estética',
+        card_title_flatness: 'Notas sobre la estética de la homogeneización',
+        card_excerpt_flatness: 'De Corporate Memphis a las imágenes generadas por IA, el rastro de la homogeneización visual de internet y lo que revela sobre nuestra imaginación colectiva.',
+
+        back_to_blog: 'volver al blog',
+
+        art_label_mainstream: 'Cultura Digital',
+        art_h1_mainstream: 'Mainstream<br><em>Niche</em>',
+        art_deck_mainstream: 'Por qué las estrellas más exitosas de las que nunca escuchaste hablar dicen todo sobre el funcionamiento actual de los mass media.',
+
+        art_label_iap: 'Opinión · Industria de Medios',
+        art_h1_iap: 'Narrative<br><em>IAP</em>',
+        art_deck_iap: 'Cómo los microdramas verticales construyeron una industria de USD 26 mil millones vendiendo lo único que el streaming nunca pudo ofrecer: la compulsión de saber qué pasa después.',
+
+        art_label_engines: 'Teoría de Medios',
+        art_h1_engines: 'Los Dos<br><em>Motores</em>',
+        art_deck_engines: 'Todos los frameworks narrativos, de Aristóteles a Blake Snyder, arrancan igual. El streaming, por fin, permitió medir esta unidad de valor.',
+
+        art_label_flatness: 'Estética',
+        art_h1_flatness: 'Notas sobre la<br><em>estética de la homogeneización</em>',
+        art_deck_flatness: 'De Corporate Memphis a las imágenes generadas por IA, el rastro de la homogeneización visual de internet y lo que dice sobre cómo se toman decisiones de diseño a escala.',
+
+        coda_mainstream: 'La pregunta que conviene dejar abierta es esta: si la escala ya no produce legibilidad, ¿qué significa hoy la legibilidad, y quién sigue necesitándola?',
+        coda_iap: 'La pregunta que conviene dejar abierta es esta: si el cliffhanger pasó a ser un producto feature y no una elección narrativa, ¿qué lugar les queda a los escritores que se formaron durante años para dominarlo?',
+
+        card_tag_englishlatino: 'u.s. latino · estrategia de medios',
+        card_title_englishlatino: 'Le Estás Hablando al Latino Equivocado',
+        card_excerpt_englishlatino: 'Por qué el mercado hispano en EE.UU. no es lo que la industria cree que es, y qué implica una audiencia con un poder de compra de 3,78 billones de dólares.',
+
+        art_label_englishlatino: 'U.S. Latino · Estrategia de Medios',
+        art_h1_englishlatino: 'Le Estás Hablando al<br><em>Latino Equivocado</em>',
+        art_deck_englishlatino: 'Por qué el mercado hispano en EE.UU. no es lo que la industria cree que es, y qué implica una audiencia con un poder de compra de 3,78 billones de dólares.',
+
+        coda_englishlatino: 'La industria tiene un nombre para la audiencia que necesita conquistar. Sigue llamándola &#8220;el mercado hispano.&#8221; Esa audiencia tiene su propio nombre: americana.',
+
+        card_tag_freelunch: 'industria de medios · modelos de negocio',
+        card_title_freelunch: 'Todo lo Gratis Tiene Precio',
+        card_excerpt_freelunch: 'Durante veinte años, Meta y YouTube perfeccionaron el arte de monetizar el trabajo ajeno. El modelo funcionó. El problema es que también tiene un techo.',
+
+        art_label_freelunch: 'Industria de Medios · Modelos de Negocio',
+        art_h1_freelunch: 'Todo lo Gratis<br><em>Tiene Precio</em>',
+        art_deck_freelunch: 'Durante veinte años, Meta y YouTube perfeccionaron el arte de monetizar el trabajo ajeno. El modelo funcionó. El problema es que también tiene un techo — y las dos empresas lo están tocando al mismo tiempo, desde lados opuestos.',
+
+        coda_freelunch: 'El modelo nunca fue gratis. Alguien siempre absorbió el costo. La pregunta es cuándo eso deja de ser invisible — y para quién.',
+
+        art_disclosure: 'Divulgación IA: conceptualizado y escrito por mí, reestructurado y pulido en estilo por Claude Sonnet 4.6.',
+        art_disclosure2: 'Divulgación IA: conceptualizado y escrito por mí, estructurado y pulido en estilo por Claude Sonnet 4.6.',
+
+
+        subscribe_title: 'Newsletter',
+        subscribe_desc: 'Artículos nuevos directo a tu correo. Sin ruido, sin compromiso de frecuencia.',
+        subscribe_placeholder: 'tu@email.com',
+        subscribe_btn: 'suscribirme',
+        comments_label: '// respuestas',
+        footer_copy: '&copy; 2026 Manu',
+      }
+    };
+
+    function switchLang(lang) {
+      currentLang = lang;
+
+      // Update all data-i18n elements
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key] !== undefined) {
+          el.innerHTML = translations[lang][key];
+        }
+      });
+
+      // Show/hide language-specific content divs
+      document.querySelectorAll('.art-content[data-lang]').forEach(el => {
+        el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+      });
+
+      // Toggle active button state
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+
+      // Update html lang attribute
+      document.documentElement.lang = lang;
+    }
+  </script>
+
+  <script>
+    // Nav scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+
+    // Fade-in on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Toggle article inline
+    function toggleArticle(id) {
+      const section = document.getElementById('article-section' + (id === 'mainstream' ? '' : '-' + id));
+      const card = document.getElementById('card-' + id);
+      const isOpen = section.classList.contains('open');
+
+      // Close any other open article first
+      document.querySelectorAll('[id^="article-section"]').forEach(s => s.classList.remove('open'));
+      document.querySelectorAll('.post-card').forEach(c => c.classList.remove('active'));
+
+      if (isOpen) {
+        history.replaceState(null, '', window.location.pathname);
+        document.getElementById('blog').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        section.classList.add('open');
+        card.classList.add('active');
+        history.replaceState(null, '', '#' + id);
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+      }
+    }
+
+    // Open article from hash on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const section = document.getElementById('article-section' + (hash === 'mainstream' ? '' : '-' + hash));
+        const card = document.getElementById('card-' + hash);
+        if (section && card) {
+          section.classList.add('open');
+          card.classList.add('active');
+          setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
+
+  <script>
+    // ── ARTICLE ORDER ───────────────────────────────────────────────────────
+    const ARTICLE_ORDER = ['englishlatino', 'freelunch', 'mainstream', 'narrativeiap', 'narrativegravity', 'newflatness'];
+
+    // ── LANGUAGE STATE ──────────────────────────────────────────────────────
+    let currentLang = 'en';
+
+    // ── TRANSLATIONS (card/nav/ui strings) ─────────────────────────────────
+    // These are loaded from article JSON files; only UI strings live here.
+    const ui = {
+      en: {
+        blog_title: 'Blog',
+        nav_about: 'about',
+        nav_blog: 'blog',
+        back_to_blog: 'back to blog',
+        comments_label: '// responses',
+        art_disclosure: 'AI disclosure: Conceptualized and written by me, re-structured and style polished by Claude Sonnet 4.6.',
+        subscribe_title: 'Subscribe',
+        subscribe_body: 'Receive new posts by email.',
+        subscribe_placeholder: 'your@email.com',
+        subscribe_btn: 'subscribe',
+      },
+      es: {
+        blog_title: 'Blog',
+        nav_about: 'about',
+        nav_blog: 'blog',
+        back_to_blog: 'volver al blog',
+        comments_label: '// respuestas',
+        art_disclosure: 'Nota de IA: Conceptualizado y escrito por mí, restructurado y estilizado con Claude Sonnet 4.6.',
+        subscribe_title: 'Suscribite',
+        subscribe_body: 'Recibí nuevos artículos por email.',
+        subscribe_placeholder: 'tu@email.com',
+        subscribe_btn: 'suscribirse',
+      }
+    };
+
+    // ── BUILD CARD HTML ─────────────────────────────────────────────────────
+    function buildCard(art, lang) {
+      const l = lang;
+      const tag   = art.card[`tag_${l}`]   || art.card.tag_en;
+      const title = art.card[`title_${l}`] || art.card.title_en;
+      const excerpt = art.card[`excerpt_${l}`] || art.card.excerpt_en;
+      return `
+      <button class="post-card" id="card-${art.id}" onclick="toggleArticle('${art.id}')">
+        <div>
+          <div class="post-tag">${tag}</div>
+          <div class="post-title">${title}</div>
+          <div class="post-excerpt">${excerpt}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="post-date">${art.date}</div>
+          <div class="post-arrow">&#8594;</div>
+        </div>
+      </button>`;
+    }
+
+    // ── BUILD SECTION CONTENT ───────────────────────────────────────────────
+    function buildSectionContent(art, lang) {
+      const l = lang;
+      let html = '';
+      const lede = art[`lede_${l}`] || art.lede_en;
+      
+      art.sections.forEach((sec, i) => {
+        const heading = sec[`heading_${l}`] || sec.heading_en || '';
+        const body    = sec[`body_${l}`]    || sec.body_en    || '';
+        const pq      = sec[`pullquote_${l}`] || '';
+        const chart   = sec.chart_after || '';
+
+        let block = '<div class="art-content">';
+        // Lede only in first section
+        if (i === 0 && lede) block += `<p class="art-lede">${lede}</p>`;
+        if (heading) block += `<h2>${heading}</h2>`;
+        block += body;
+        if (pq) block += `<div class="art-pullquote">${pq}</div>`;
+        block += '</div>';
+
+        html += block;
+        if (chart) html += chart;
+      });
+
+      return html;
+    }
+
+    // ── BUILD FULL ARTICLE HTML ─────────────────────────────────────────────
+    function buildArticle(art) {
+      const heroHtml = art.hero_src
+        ? `<div class="art-hero" style="aspect-ratio:16/9;overflow:hidden;"><img src="${art.hero_src}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"/></div>`
+        : `<div class="art-hero" style="aspect-ratio:16/9;background:#0a0a0f;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Playfair Display',serif;font-size:clamp(3.5rem,12vw,8rem);font-weight:900;color:rgba(255,255,255,0.06);letter-spacing:-0.04em;user-select:none;">manu.</span></div>`;
+
+      const sectionId = art.id === 'mainstream' ? 'article-section' : `article-section-${art.id}`;
+      const giscusTerm = art.giscus_term || art.card.title_en;
+
+      return `
+  <div id="${sectionId}">
+    <div class="article-wrapper">
+      <button class="article-back" onclick="toggleArticle('${art.id}')">
+        <span>&#8592;</span> <span data-ui="back_to_blog">back to blog</span>
+      </button>
+      <article class="reader-article">
+        ${heroHtml}
+        <header>
+          <span class="art-label" id="art-label-${art.id}"></span>
+          <h1 id="art-h1-${art.id}"></h1>
+          <p class="art-deck" id="art-deck-${art.id}"></p>
+        </header>
+        <div id="art-body-${art.id}"></div>
+        <p class="art-coda" id="art-coda-${art.id}"></p>
+        <p class="art-disclosure" data-ui="art_disclosure">AI disclosure: Conceptualized and written by me, re-structured and style polished by Claude Sonnet 4.6.</p>
+        <div class="art-comments">
+          <span class="comments-label" data-ui="comments_label">// responses</span>
+          <script src="https://giscus.app/client.js"
+            data-repo="deuxfoistrois/manusite"
+            data-repo-id="R_kgDORuCKdw"
+            data-category="General"
+            data-category-id="DIC_kwDORuCKd84C5Ddd"
+            data-mapping="specific"
+            data-term="${giscusTerm}"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="dark_tritanopia"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+          <\/script>
+        </div>
+      </article>
+    </div>
+  </div>`;
+    }
+
+    // ── UPDATE ARTICLE TEXT FOR LANG ────────────────────────────────────────
+    function updateArticleText(art, lang) {
+      const l = lang;
+      const label = document.getElementById(`art-label-${art.id}`);
+      const h1    = document.getElementById(`art-h1-${art.id}`);
+      const deck  = document.getElementById(`art-deck-${art.id}`);
+      const body  = document.getElementById(`art-body-${art.id}`);
+      const coda  = document.getElementById(`art-coda-${art.id}`);
+      if (label) label.textContent = art.header[`label_${l}`] || art.header.label_en;
+      if (h1)    h1.innerHTML      = art.header[`h1_${l}`]    || art.header.h1_en;
+      if (deck)  deck.textContent  = art.header[`deck_${l}`]  || art.header.deck_en;
+      if (body)  body.innerHTML    = buildSectionContent(art, l);
+      if (coda)  coda.innerHTML    = art[`coda_${l}`]         || art.coda_en;
+    }
+
+    // ── SWITCH LANGUAGE ─────────────────────────────────────────────────────
+    function switchLang(lang) {
+      currentLang = lang;
+      // Update UI strings
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (ui[lang] && ui[lang][key]) el.innerHTML = ui[lang][key];
+      });
+      document.querySelectorAll('[data-ui]').forEach(el => {
+        const key = el.getAttribute('data-ui');
+        if (ui[lang] && ui[lang][key]) el.innerHTML = ui[lang][key];
+      });
+      // Update cards
+      const grid = document.getElementById('posts-grid');
+      if (grid && window._articles) {
+        grid.innerHTML = ARTICLE_ORDER
+          .map(id => window._articles[id])
+          .filter(Boolean)
+          .map(art => buildCard(art, lang))
+          .join('');
+      }
+      // Update open articles
+      if (window._articles) {
+        Object.values(window._articles).forEach(art => updateArticleText(art, lang));
+      }
+      // Toggle lang buttons
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+      document.documentElement.lang = lang;
+    }
+
+    // ── TOGGLE ARTICLE ──────────────────────────────────────────────────────
+    function toggleArticle(id) {
+      const sectionId = id === 'mainstream' ? 'article-section' : `article-section-${id}`;
+      const section = document.getElementById(sectionId);
+      const card    = document.getElementById(`card-${id}`);
+      if (!section || !card) return;
+      const isOpen  = section.classList.contains('open');
+      document.querySelectorAll('[id^="article-section"]').forEach(s => s.classList.remove('open'));
+      document.querySelectorAll('.post-card').forEach(c => c.classList.remove('active'));
+      if (isOpen) {
+        history.replaceState(null, '', window.location.pathname);
+        document.getElementById('blog').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        section.classList.add('open');
+        card.classList.add('active');
+        history.replaceState(null, '', '#' + id);
+        setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      }
+    }
+
+    // ── LOAD ARTICLES ───────────────────────────────────────────────────────
+    async function loadArticles() {
+      window._articles = {};
+      const container = document.getElementById('articles-container');
+      const grid = document.getElementById('posts-grid');
+
+      await Promise.all(ARTICLE_ORDER.map(async (id) => {
+        try {
+          const res = await fetch(`content/articles/${id}.json`);
+          const art = await res.json();
+          window._articles[id] = art;
+          // Inject article section
+          const div = document.createElement('div');
+          div.innerHTML = buildArticle(art);
+          container.appendChild(div.firstElementChild);
+          // Set initial text
+          updateArticleText(art, currentLang);
+        } catch(e) {
+          console.error(`Failed to load ${id}:`, e);
+        }
+      }));
+
+      // Render cards in order
+      grid.innerHTML = ARTICLE_ORDER
+        .map(id => window._articles[id])
+        .filter(Boolean)
+        .map(art => buildCard(art, currentLang))
+        .join('');
+
+      // Handle hash on load
+      const hash = window.location.hash.replace('#', '');
+      if (hash && window._articles[hash]) {
+        const sectionId = hash === 'mainstream' ? 'article-section' : `article-section-${hash}`;
+        const section = document.getElementById(sectionId);
+        const card    = document.getElementById(`card-${hash}`);
+        if (section && card) {
+          section.classList.add('open');
+          card.classList.add('active');
+          setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+        }
+      }
+    }
+
+    // ── INIT ────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      // Nav scroll
+      const nav = document.getElementById('nav');
+      window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+
+      // Fade-in observer
+      const observer = new IntersectionObserver(
+        (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+        { threshold: 0.1 }
+      );
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+      // Smooth scroll
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href === '#') return;
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // Load all articles
+      loadArticles();
+    });
+  </script>
+
+</body>
+</html>

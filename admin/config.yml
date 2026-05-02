@@ -1,0 +1,74 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: assets/heroes
+public_folder: assets/heroes
+
+locale: en
+
+collections:
+  - name: articles
+    label: Articles
+    label_singular: Article
+    folder: content/articles
+    extension: json
+    format: json
+    create: false
+    slug: "{{id}}"
+    identifier_field: id
+    summary: "{{card.title_en}} — {{date}}"
+    sortable_fields: ['date', 'card.title_en']
+    fields:
+
+      - { label: "ID", name: id, widget: string, hint: "Slug — do not change" }
+      - { label: "Date", name: date, widget: string, hint: "Format: YYYY.MM.DD" }
+      - { label: "Giscus term", name: giscus_term, widget: string }
+
+      - label: "Hero image"
+        name: hero_src
+        widget: image
+        required: false
+        hint: "Upload a new hero image, or leave as-is"
+
+      - label: "Card (blog grid)"
+        name: card
+        widget: object
+        fields:
+          - { label: "Tag EN", name: tag_en, widget: string }
+          - { label: "Tag ES", name: tag_es, widget: string }
+          - { label: "Title EN", name: title_en, widget: string }
+          - { label: "Title ES", name: title_es, widget: string }
+          - { label: "Excerpt EN", name: excerpt_en, widget: text }
+          - { label: "Excerpt ES", name: excerpt_es, widget: text }
+
+      - label: "Article header"
+        name: header
+        widget: object
+        fields:
+          - { label: "Label EN", name: label_en, widget: string }
+          - { label: "Label ES", name: label_es, widget: string }
+          - { label: "Title EN (HTML)", name: h1_en, widget: string, hint: "Can include <br> and <em>" }
+          - { label: "Title ES (HTML)", name: h1_es, widget: string }
+          - { label: "Deck EN", name: deck_en, widget: text }
+          - { label: "Deck ES", name: deck_es, widget: text }
+
+      - { label: "Opening paragraph EN", name: lede_en, widget: text, required: false }
+      - { label: "Opening paragraph ES", name: lede_es, widget: text, required: false }
+
+      - label: "Sections"
+        name: sections
+        widget: list
+        summary: "{{fields.heading_en}}"
+        fields:
+          - { label: "Heading EN", name: heading_en, widget: string, required: false }
+          - { label: "Heading ES", name: heading_es, widget: string, required: false }
+          - { label: "Body EN", name: body_en, widget: markdown }
+          - { label: "Body ES", name: body_es, widget: markdown }
+          - { label: "Pull quote EN", name: pullquote_en, widget: text, required: false }
+          - { label: "Pull quote ES", name: pullquote_es, widget: text, required: false }
+          - { label: "Chart HTML (do not edit)", name: chart_after, widget: text, required: false }
+
+      - { label: "Closing line EN", name: coda_en, widget: text, required: false }
+      - { label: "Closing line ES", name: coda_es, widget: text, required: false }
+      - { label: "Hero image (base64 — do not edit)", name: hero_img, widget: hidden }
