@@ -930,7 +930,15 @@
       if (label) label.textContent = art.header['label_' + lang] || art.header.label_en || '';
       if (h1)    h1.innerHTML      = art.header['h1_'    + lang] || art.header.h1_en    || '';
       if (deck)  deck.textContent  = art.header['deck_'  + lang] || art.header.deck_en  || '';
-      if (body)  body.innerHTML    = buildSectionContent(art, lang);
+      if (body)  {
+        body.innerHTML = buildSectionContent(art, lang);
+        // Execute any chart initialization scripts stored separately
+        art.sections.forEach(function(sec) {
+          if (sec.chart_script) {
+            try { new Function(sec.chart_script)(); } catch(e) { console.warn('Chart script error:', e); }
+          }
+        });
+      }
       if (coda)  coda.innerHTML    = art['coda_' + lang]         || art.coda_en         || '';
     }
 
