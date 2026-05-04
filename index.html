@@ -503,6 +503,7 @@
     
   </style>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </head>
 <body>
 
@@ -925,11 +926,14 @@
       if (deck)  deck.textContent  = art.header['deck_'  + lang] || art.header.deck_en  || '';
       if (body) {
         body.innerHTML = buildSectionContent(art, lang);
-        art.sections.forEach(function(sec) {
-          if (sec.chart_script) {
-            try { new Function(sec.chart_script)(); } catch(e) { console.warn('Chart error:', e); }
-          }
-        });
+        var chartSections = art.sections.filter(function(s) { return s.chart_script; });
+        if (chartSections.length) {
+          requestAnimationFrame(function() {
+            chartSections.forEach(function(sec) {
+              try { new Function(sec.chart_script)(); } catch(e) { console.warn('Chart error:', e); }
+            });
+          });
+        }
       }
       if (coda)  coda.innerHTML    = art['coda_' + lang]         || art.coda_en         || '';
     }
