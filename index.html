@@ -502,7 +502,6 @@
 
     
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
@@ -578,12 +577,6 @@
   <div class="divider"></div>
 
   <!-- BLOG -->
-  <section id="blog" class="fade-in">
-    <div class="section-header">
-      <div class="section-label">// 02</div>
-      <h2 class="section-title" data-i18n="blog_title">Blog</h2>
-    </div>
-
   <section id="blog" class="section fade-in">
     <div class="section-header">
       <span class="section-num">// 02</span>
@@ -630,7 +623,7 @@
 </html>
 
   <script>
-    const ARTICLE_ORDER = ["englishlatino", "freelunch", "narrativegravity", "narrativeiap", "mainstream", "newflatness"];
+    const ARTICLE_ORDER = ["englishlatino", "freelunch", "mainstream", "narrativeiap", "narrativegravity", "newflatness"];
     let currentLang = 'en';
 
     const translations = {
@@ -930,15 +923,7 @@
       if (label) label.textContent = art.header['label_' + lang] || art.header.label_en || '';
       if (h1)    h1.innerHTML      = art.header['h1_'    + lang] || art.header.h1_en    || '';
       if (deck)  deck.textContent  = art.header['deck_'  + lang] || art.header.deck_en  || '';
-      if (body)  {
-        body.innerHTML = buildSectionContent(art, lang);
-        // Execute any chart initialization scripts stored separately
-        art.sections.forEach(function(sec) {
-          if (sec.chart_script) {
-            try { new Function(sec.chart_script)(); } catch(e) { console.warn('Chart script error:', e); }
-          }
-        });
-      }
+      if (body)  body.innerHTML    = buildSectionContent(art, lang);
       if (coda)  coda.innerHTML    = art['coda_' + lang]         || art.coda_en         || '';
     }
 
@@ -994,37 +979,42 @@
         .map(function(art) { return buildCard(art, currentLang); })
         .join('');
       var hash = window.location.hash.replace('#', '');
-      if (hash && window._articles[hash]) {
-        var sid  = hash === 'mainstream' ? 'article-section' : 'article-section-' + hash;
+      var utmCampaign = new URLSearchParams(window.location.search).get('utm_campaign');
+      var campaignMap = { 'le-estas-hablando-al-latino-equivocado': 'englishlatino' };
+      var target = hash || (utmCampaign && campaignMap[utmCampaign]) || '';
+      function tryOpenArticle(attempts) {
+        if (!target) return;
+        var sid  = target === 'mainstream' ? 'article-section' : 'article-section-' + target;
         var sect = document.getElementById(sid);
-        var card = document.getElementById('card-' + hash);
+        var card = document.getElementById('card-' + target);
         if (sect && card) {
           sect.classList.add('open');
           card.classList.add('active');
-          addGiscus(window._articles[hash]);
+          if (window._articles[target]) addGiscus(window._articles[target]);
           setTimeout(function() { sect.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+        } else if (attempts > 0) {
+          setTimeout(function() { tryOpenArticle(attempts - 1); }, 300);
         }
       }
+      tryOpenArticle(10);
     }
 
     function loadArticles() {
       window._articles = {};
       var container = document.getElementById('articles-container');
-      var promises = ARTICLE_ORDER.map(function(id) {
-        return fetch('content/articles/' + id + '.json')
+      var loaded = 0;
+      ARTICLE_ORDER.forEach(function(id) {
+        fetch('content/articles/' + id + '.json')
           .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-          .then(function(art) { window._articles[id] = art; return art; })
-          .catch(function(e) { console.error('Failed:', id, e); return null; });
-      });
-      Promise.all(promises).then(function(results) {
-        results.forEach(function(art) {
-          if (!art) return;
-          var wrap = document.createElement('div');
-          wrap.innerHTML = buildArticleHTML(art);
-          container.appendChild(wrap.firstElementChild);
-          updateArticleText(art, currentLang);
-        });
-        onAllLoaded();
+          .then(function(art) {
+            window._articles[id] = art;
+            var wrap = document.createElement('div');
+            wrap.innerHTML = buildArticleHTML(art);
+            container.appendChild(wrap.firstElementChild);
+            updateArticleText(art, currentLang);
+          })
+          .catch(function(e) { console.error('Failed:', id, e); })
+          .finally(function() { if (++loaded === ARTICLE_ORDER.length) onAllLoaded(); });
       });
     }
 
