@@ -1010,19 +1010,21 @@
     function loadArticles() {
       window._articles = {};
       var container = document.getElementById('articles-container');
-      var loaded = 0;
-      ARTICLE_ORDER.forEach(function(id) {
-        fetch('content/articles/' + id + '.json')
+      var promises = ARTICLE_ORDER.map(function(id) {
+        return fetch('content/articles/' + id + '.json')
           .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-          .then(function(art) {
-            window._articles[id] = art;
-            var wrap = document.createElement('div');
-            wrap.innerHTML = buildArticleHTML(art);
-            container.appendChild(wrap.firstElementChild);
-            updateArticleText(art, currentLang);
-          })
-          .catch(function(e) { console.error('Failed:', id, e); })
-          .finally(function() { if (++loaded === ARTICLE_ORDER.length) onAllLoaded(); });
+          .then(function(art) { window._articles[id] = art; return art; })
+          .catch(function(e) { console.error('Failed:', id, e); return null; });
+      });
+      Promise.all(promises).then(function(results) {
+        results.forEach(function(art) {
+          if (!art) return;
+          var wrap = document.createElement('div');
+          wrap.innerHTML = buildArticleHTML(art);
+          container.appendChild(wrap.firstElementChild);
+          updateArticleText(art, currentLang);
+        });
+        onAllLoaded();
       });
     }
 
