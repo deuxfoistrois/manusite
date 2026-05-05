@@ -895,18 +895,30 @@
 
     function fbSignIn() {
       if (!window.firebase) return;
-      firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-        .then(function(r) {
-          window._fbAdmin = r.user.uid;
-          document.querySelectorAll('[id^="fb-admin-btn-"]').forEach(function(b){ b.style.display='none'; });
-        })
-        .catch(function(e){ console.warn('Auth error:', e); });
+      // Use redirect instead of popup — more reliable across all browsers/hosts
+      firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider());
     }
 
     function addGiscus(art) {
       var fbCfg = {apiKey:"AIzaSyA2rG2oxan8Jv4l65qEIWCHs598PwFdVWQ",authDomain:"manusite-9b861.firebaseapp.com",projectId:"manusite-9b861"};
       if (!window.firebase) { console.warn('Firebase not loaded'); return; }
-      if (!firebase.apps.length) firebase.initializeApp(fbCfg);
+      if (!firebase.apps.length) {
+        firebase.initializeApp(fbCfg);
+        // Handle redirect result on page load
+        firebase.auth().getRedirectResult().then(function(result) {
+          if (result.user) {
+            window._fbAdmin = result.user.uid;
+            document.querySelectorAll('[id^="fb-admin-btn-"]').forEach(function(b){ b.style.display='none'; });
+          }
+        });
+        // Persist admin state across page loads
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            window._fbAdmin = user.uid;
+            document.querySelectorAll('[id^="fb-admin-btn-"]').forEach(function(b){ b.style.display='none'; });
+          }
+        });
+      }
       var db = firebase.firestore();
       var container = document.getElementById('art-comments-' + art.id);
       if (!container || container.dataset.fbLoaded) return;
