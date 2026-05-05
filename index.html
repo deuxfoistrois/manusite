@@ -504,9 +504,6 @@
   </style>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -897,99 +894,25 @@
     }
 
     function addGiscus(art) {
-      // Firebase comment system
-      var fb = {
-        apiKey: "AIzaSyA2rG2oxan8Jv4l65qEIWCHs598PwFdVWQ",
-        authDomain: "manusite-9b861.firebaseapp.com",
-        projectId: "manusite-9b861"
-      };
-      if (!firebase.apps.length) firebase.initializeApp(fb);
-      var db = firebase.firestore();
-
       var container = document.getElementById('art-comments-' + art.id);
-      if (!container || container.dataset.fbLoaded) return;
-      container.dataset.fbLoaded = '1';
-
-      function escH(s) {
-        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      }
-
-      function render() {
-        var label = '<span class="comments-label">// responses</span>';
-        var adminBtn = '<div style="text-align:right;margin-bottom:1rem">'
-          + '<button onclick="fbAdminSignIn('' + art.id + '')" id="fb-admin-btn-' + art.id + '" '
-          + 'style="background:none;border:none;color:var(--text-dim);font-family:var(--mono);font-size:0.6rem;cursor:pointer;letter-spacing:0.1em">admin</button>'
-          + '</div>';
-        var list = '<div id="fb-list-' + art.id + '" style="margin-bottom:2rem"></div>';
-        var form = '<form onsubmit="fbSubmit(event,'' + art.id + '')" style="display:flex;flex-direction:column;gap:0.75rem">'
-          + '<input id="fb-name-' + art.id + '" type="text" placeholder="name (optional)" maxlength="60" '
-          + 'style="background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:0.85rem;padding:0.6rem 0.9rem;border-radius:6px;outline:none"/>'
-          + '<textarea id="fb-body-' + art.id + '" placeholder="leave a comment..." rows="3" maxlength="1000" required '
-          + 'style="background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:0.85rem;padding:0.6rem 0.9rem;border-radius:6px;outline:none;resize:vertical"></textarea>'
-          + '<button type="submit" style="align-self:flex-end;background:var(--bg-card);border:1px solid var(--border);color:var(--text);'
-          + 'font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;padding:0.5rem 1.25rem;border-radius:6px;cursor:pointer">post &rarr;</button>'
-          + '</form>'
-          + '<div id="fb-status-' + art.id + '" style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem;min-height:1rem"></div>';
-        container.innerHTML = label + adminBtn + list + form;
-
-        db.collection('comments')
-          .where('artId','==',art.id)
-          .orderBy('ts','asc')
-          .onSnapshot(function(snap) {
-            var el = document.getElementById('fb-list-' + art.id);
-            if (!el) return;
-            if (snap.empty) {
-              el.innerHTML = '<p style="font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem">no comments yet.</p>';
-              return;
-            }
-            var isAdmin = window._fbAdmin;
-            el.innerHTML = snap.docs.map(function(doc) {
-              var d = doc.data();
-              var name = d.name || 'anonymous';
-              var date = d.ts ? new Date(d.ts.toMillis()).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}) : '';
-              var del = isAdmin ? '<button onclick="fbDelete('' + doc.id + '')" style="background:none;border:none;color:var(--text-dim);font-size:0.65rem;cursor:pointer;font-family:var(--mono);margin-left:0.75rem;opacity:0.5">&times; delete</button>' : '';
-              return '<div style="padding:1rem 0;border-bottom:1px solid var(--border)">'
-                + '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem">'
-                + '<span style="font-family:var(--mono);font-size:0.72rem;color:var(--text);font-weight:600">' + escH(name) + '</span>'
-                + '<span style="font-family:var(--mono);font-size:0.65rem;color:var(--text-dim)">' + date + '</span>'
-                + del + '</div>'
-                + '<p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;margin:0">' + escH(d.body) + '</p>'
-                + '</div>';
-            }).join('');
-          });
-      }
-
-      render();
-
-      window.fbSubmit = window.fbSubmit || function(e, artId) {
-        e.preventDefault();
-        var name = document.getElementById('fb-name-' + artId).value.trim();
-        var body = document.getElementById('fb-body-' + artId).value.trim();
-        var status = document.getElementById('fb-status-' + artId);
-        if (!body) return;
-        status.textContent = 'posting...';
-        db.collection('comments').add({
-          artId: artId, name: name, body: body,
-          ts: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(function() {
-          document.getElementById('fb-name-' + artId).value = '';
-          document.getElementById('fb-body-' + artId).value = '';
-          status.textContent = '';
-        }).catch(function() { status.textContent = 'error — try again.'; });
-      };
-
-      window.fbDelete = window.fbDelete || function(docId) {
-        if (!window._fbAdmin) return;
-        if (confirm('Delete this comment?')) db.collection('comments').doc(docId).delete();
-      };
-
-      window.fbAdminSignIn = window.fbAdminSignIn || function(artId) {
-        firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-          .then(function(r) {
-            window._fbAdmin = r.user.uid;
-            document.getElementById('fb-admin-btn-' + artId).style.display = 'none';
-          });
-      };
+      if (!container || container.querySelector('iframe')) return;
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      s.setAttribute('data-repo',            'deuxfoistrois/manusite');
+      s.setAttribute('data-repo-id',         'R_kgDORuCKdw');
+      s.setAttribute('data-category',        'General');
+      s.setAttribute('data-category-id',     'DIC_kwDORuCKd84C5Ddd');
+      s.setAttribute('data-mapping',         'specific');
+      s.setAttribute('data-term',            art.giscus_term || art.card.title_en);
+      s.setAttribute('data-strict',          '0');
+      s.setAttribute('data-reactions-enabled','1');
+      s.setAttribute('data-emit-metadata',   '0');
+      s.setAttribute('data-input-position',  'bottom');
+      s.setAttribute('data-theme',           'dark_tritanopia');
+      s.setAttribute('data-lang',            'en');
+      s.setAttribute('crossorigin',          'anonymous');
+      s.async = true;
+      container.appendChild(s);
     }
 
     function updateArticleText(art, lang) {
