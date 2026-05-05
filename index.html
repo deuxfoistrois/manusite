@@ -425,6 +425,7 @@
       white-space: nowrap;
     }
     .subscribe-form button:hover { background: #fff; }
+    #comments-list-* div:last-child { border-bottom: none; }
     .subscribe-confirm { display: none; font-family: var(--mono); font-size: 0.85rem;
       color: var(--red); margin-top: 1rem; }
 
@@ -503,7 +504,9 @@
     
   </style>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -624,7 +627,7 @@
 </html>
 
   <script>
-    const ARTICLE_ORDER = ["englishlatino", "freelunch", "narrativegravity", "narrativeiap", "mainstream", "newflatness"];
+    const ARTICLE_ORDER = ["englishlatino", "freelunch", "mainstream", "narrativeiap", "narrativegravity", "newflatness"];
     let currentLang = 'en';
 
     const translations = {
@@ -893,26 +896,130 @@
            + '</div>';
     }
 
+        // ── FIREBASE INIT ──────────────────────────────────────────────────────────
+    var firebaseConfig = {
+      apiKey: "AIzaSyA2rG2oxan8Jv4l65qEIWCHs598PwFdVWQ",
+      authDomain: "manusite-9b861.firebaseapp.com",
+      projectId: "manusite-9b861",
+      storageBucket: "manusite-9b861.firebasestorage.app",
+      messagingSenderId: "78236721733",
+      appId: "1:78236721733:web:201142d507d27e0ea2792c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.firestore();
+    var adminUid = null; // set after Google sign-in
+
+    // Sign in admin with Google (invisible button in comments area)
+    function adminSignIn() {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then(function(result) {
+        adminUid = result.user.uid;
+        // Refresh all open comment sections
+        document.querySelectorAll('[id^="art-comments-"]').forEach(function(el) {
+          var artId = el.id.replace('art-comments-', '');
+          if (window._articles && window._articles[artId]) {
+            renderComments(artId);
+          }
+        });
+        // Hide all admin-signin buttons
+        document.querySelectorAll('.admin-signin').forEach(function(el) { el.style.display = 'none'; });
+      }).catch(function(e) { console.warn('Sign in failed:', e); });
+    }
+
+    // Listen for auth state
+    firebase.auth().onAuthStateChanged(function(user) {
+      adminUid = user ? user.uid : null;
+    });
+
+    function renderComments(artId) {
+      var container = document.getElementById('art-comments-' + artId);
+      if (!container) return;
+
+      // Keep the label and admin button, replace the rest
+      var label = container.querySelector('.comments-label');
+      var labelHTML = label ? label.outerHTML : '<span class="comments-label">// responses</span>';
+
+      container.innerHTML = labelHTML
+        + '<div class="admin-signin" style="text-align:right;margin-bottom:1rem;display:' + (adminUid ? 'none' : 'block') + '">'
+        + '<button onclick="adminSignIn()" style="background:none;border:none;color:var(--text-dim);font-family:var(--mono);font-size:0.6rem;cursor:pointer;letter-spacing:0.1em;">admin</button>'
+        + '</div>'
+        + '<div id="comments-list-' + artId + '" style="margin-bottom:2rem"></div>'
+        + '<form id="comment-form-' + artId + '" onsubmit="submitComment(event,'' + artId + '')" style="display:flex;flex-direction:column;gap:0.75rem">'
+        + '<input id="comment-name-' + artId + '" type="text" placeholder="name (optional)" maxlength="60" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:0.85rem;padding:0.6rem 0.9rem;border-radius:6px;outline:none"/>'
+        + '<textarea id="comment-body-' + artId + '" placeholder="leave a comment..." rows="3" maxlength="1000" required style="background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:0.85rem;padding:0.6rem 0.9rem;border-radius:6px;outline:none;resize:vertical"></textarea>'
+        + '<button type="submit" style="align-self:flex-end;background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;padding:0.5rem 1.25rem;border-radius:6px;cursor:pointer;">post &rarr;</button>'
+        + '</form>'
+        + '<div id="comment-status-' + artId + '" style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem;min-height:1rem"></div>';
+
+      loadComments(artId);
+    }
+
+    function loadComments(artId) {
+      var list = document.getElementById('comments-list-' + artId);
+      if (!list) return;
+      db.collection('comments')
+        .where('artId', '==', artId)
+        .orderBy('ts', 'asc')
+        .onSnapshot(function(snapshot) {
+          if (snapshot.empty) {
+            list.innerHTML = '<p style="font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem">no comments yet.</p>';
+            return;
+          }
+          list.innerHTML = snapshot.docs.map(function(doc) {
+            var d = doc.data();
+            var name = d.name ? d.name : 'anonymous';
+            var date = d.ts ? new Date(d.ts.toMillis()).toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'}) : '';
+            var deleteBtn = adminUid
+              ? '<button onclick="deleteComment('' + doc.id + '','' + artId + '')" style="background:none;border:none;color:var(--text-dim);font-size:0.65rem;cursor:pointer;font-family:var(--mono);margin-left:0.75rem;opacity:0.5">&times; delete</button>'
+              : '';
+            return '<div style="padding:1rem 0;border-bottom:1px solid var(--border)">'
+              + '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem">'
+              + '<span style="font-family:var(--mono);font-size:0.72rem;color:var(--text);font-weight:600">' + escapeHTML(name) + '</span>'
+              + '<span style="font-family:var(--mono);font-size:0.65rem;color:var(--text-dim)">' + date + '</span>'
+              + deleteBtn
+              + '</div>'
+              + '<p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;margin:0">' + escapeHTML(d.body) + '</p>'
+              + '</div>';
+          }).join('');
+        }, function(err) {
+          console.warn('Comments load error:', err);
+          list.innerHTML = '<p style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim)">could not load comments.</p>';
+        });
+    }
+
+    function submitComment(e, artId) {
+      e.preventDefault();
+      var name = document.getElementById('comment-name-' + artId).value.trim();
+      var body = document.getElementById('comment-body-' + artId).value.trim();
+      var status = document.getElementById('comment-status-' + artId);
+      if (!body) return;
+      status.textContent = 'posting...';
+      db.collection('comments').add({
+        artId: artId,
+        name: name || '',
+        body: body,
+        ts: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function() {
+        document.getElementById('comment-form-' + artId).reset();
+        status.textContent = '';
+      }).catch(function(err) {
+        status.textContent = 'error — try again.';
+        console.warn(err);
+      });
+    }
+
+    function deleteComment(docId, artId) {
+      if (!adminUid) return;
+      if (!confirm('Delete this comment?')) return;
+      db.collection('comments').doc(docId).delete().catch(function(e) { console.warn(e); });
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
     function addGiscus(art) {
-      var container = document.getElementById('art-comments-' + art.id);
-      if (!container || container.querySelector('iframe')) return;
-      var s = document.createElement('script');
-      s.src = 'https://giscus.app/client.js';
-      s.setAttribute('data-repo',            'deuxfoistrois/manusite');
-      s.setAttribute('data-repo-id',         'R_kgDORuCKdw');
-      s.setAttribute('data-category',        'General');
-      s.setAttribute('data-category-id',     'DIC_kwDORuCKd84C5Ddd');
-      s.setAttribute('data-mapping',         'specific');
-      s.setAttribute('data-term',            art.giscus_term || art.card.title_en);
-      s.setAttribute('data-strict',          '0');
-      s.setAttribute('data-reactions-enabled','1');
-      s.setAttribute('data-emit-metadata',   '0');
-      s.setAttribute('data-input-position',  'bottom');
-      s.setAttribute('data-theme',           'dark_tritanopia');
-      s.setAttribute('data-lang',            'en');
-      s.setAttribute('crossorigin',          'anonymous');
-      s.async = true;
-      container.appendChild(s);
+      renderComments(art.id);
     }
 
     function updateArticleText(art, lang) {
@@ -924,17 +1031,7 @@
       if (label) label.textContent = art.header['label_' + lang] || art.header.label_en || '';
       if (h1)    h1.innerHTML      = art.header['h1_'    + lang] || art.header.h1_en    || '';
       if (deck)  deck.textContent  = art.header['deck_'  + lang] || art.header.deck_en  || '';
-      if (body) {
-        body.innerHTML = buildSectionContent(art, lang);
-        var chartSections = art.sections.filter(function(s) { return s.chart_script; });
-        if (chartSections.length) {
-          requestAnimationFrame(function() {
-            chartSections.forEach(function(sec) {
-              try { new Function(sec.chart_script)(); } catch(e) { console.warn('Chart error:', e); }
-            });
-          });
-        }
-      }
+      if (body)  body.innerHTML    = buildSectionContent(art, lang);
       if (coda)  coda.innerHTML    = art['coda_' + lang]         || art.coda_en         || '';
     }
 
