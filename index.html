@@ -894,14 +894,19 @@
     }
 
     function fbSignIn() {
+      sessionStorage.setItem('fb_signing_in', '1');
       firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider());
     }
 
     function fbDelete(docId) {
-      if (!window._fbAdmin) return;
+      if (!sessionStorage.getItem('fb_admin')) return;
       if (confirm('Delete this comment?')) {
         firebase.firestore().collection('comments').doc(docId).delete();
       }
+    }
+
+    function fbIsAdmin() {
+      return !!sessionStorage.getItem('fb_admin');
     }
 
     function fbBuildComment(doc) {
@@ -918,7 +923,7 @@
       dateEl.textContent = d.ts ? new Date(d.ts.toMillis()).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}) : '';
       meta.appendChild(nameEl);
       meta.appendChild(dateEl);
-      if (window._fbAdmin) {
+      if (fbIsAdmin()) {
         var delBtn = document.createElement('button');
         delBtn.textContent = '× delete';
         delBtn.style.cssText = 'background:none;border:none;color:var(--text-dim);font-size:0.65rem;cursor:pointer;font-family:var(--mono);margin-left:0.75rem;opacity:0.5';
@@ -942,13 +947,12 @@
       var inputStyle = 'background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:0.85rem;padding:0.6rem 0.9rem;border-radius:6px;outline:none';
 
       container.innerHTML = '';
-
       var label = document.createElement('span');
       label.className = 'comments-label';
       label.textContent = '// responses';
       container.appendChild(label);
 
-      if (!window._fbAdmin) {
+      if (!fbIsAdmin()) {
         var adminWrap = document.createElement('div');
         adminWrap.style.cssText = 'text-align:right;margin-bottom:1rem';
         var adminBtn = document.createElement('button');
@@ -966,25 +970,22 @@
       var form = document.createElement('form');
       form.style.cssText = 'display:flex;flex-direction:column;gap:0.75rem';
       var nameInput = document.createElement('input');
-      nameInput.type = 'text'; nameInput.placeholder = 'name (optional)'; nameInput.maxLength = 60; nameInput.style.cssText = inputStyle;
+      nameInput.type='text'; nameInput.placeholder='name (optional)'; nameInput.maxLength=60; nameInput.style.cssText=inputStyle;
       var bodyInput = document.createElement('textarea');
-      bodyInput.placeholder = 'leave a comment...'; bodyInput.rows = 3; bodyInput.maxLength = 1000; bodyInput.required = true; bodyInput.style.cssText = inputStyle + ';resize:vertical';
+      bodyInput.placeholder='leave a comment...'; bodyInput.rows=3; bodyInput.maxLength=1000; bodyInput.required=true; bodyInput.style.cssText=inputStyle+';resize:vertical';
       var submitBtn = document.createElement('button');
-      submitBtn.type = 'submit'; submitBtn.textContent = 'post →';
-      submitBtn.style.cssText = 'align-self:flex-end;background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;padding:0.5rem 1.25rem;border-radius:6px;cursor:pointer';
+      submitBtn.type='submit'; submitBtn.textContent='post →';
+      submitBtn.style.cssText='align-self:flex-end;background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;padding:0.5rem 1.25rem;border-radius:6px;cursor:pointer';
       form.appendChild(nameInput); form.appendChild(bodyInput); form.appendChild(submitBtn);
       var statusEl = document.createElement('div');
-      statusEl.style.cssText = 'font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem;min-height:1rem';
+      statusEl.style.cssText='font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem;min-height:1rem';
       form.onsubmit = function(e) {
         e.preventDefault();
-        var body = bodyInput.value.trim();
-        if (!body) return;
+        var body = bodyInput.value.trim(); if (!body) return;
         statusEl.textContent = 'posting...';
-        db.collection('comments').add({
-          artId: artId, name: nameInput.value.trim(), body: body,
-          ts: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(function(){ nameInput.value=''; bodyInput.value=''; statusEl.textContent=''; })
-          .catch(function(){ statusEl.textContent='error — try again.'; });
+        db.collection('comments').add({artId:artId,name:nameInput.value.trim(),body:body,ts:firebase.firestore.FieldValue.serverTimestamp()})
+          .then(function(){nameInput.value='';bodyInput.value='';statusEl.textContent='';})
+          .catch(function(){statusEl.textContent='error — try again.';});
       };
       container.appendChild(form);
       container.appendChild(statusEl);
@@ -993,12 +994,10 @@
         list.innerHTML = '';
         if (snap.empty) {
           var p = document.createElement('p');
-          p.style.cssText = 'font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem';
-          p.textContent = 'no comments yet.';
-          list.appendChild(p);
-          return;
+          p.style.cssText='font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem';
+          p.textContent='no comments yet.'; list.appendChild(p); return;
         }
-        snap.docs.forEach(function(doc) { list.appendChild(fbBuildComment(doc)); });
+        snap.docs.forEach(function(doc){ list.appendChild(fbBuildComment(doc)); });
       });
     }
 
@@ -1116,6 +1115,19 @@
       });
     }
 
+    // Firebase init — runs synchronously before anything else
+    var fbCfg = {apiKey:"AIzaSyA2rG2oxan8Jv4l65qEIWCHs598PwFdVWQ",authDomain:"manusite-9b861.firebaseapp.com",projectId:"manusite-9b861"};
+    if (window.firebase) {
+      if (!firebase.apps.length) firebase.initializeApp(fbCfg);
+      // Handle redirect result — this is sync-ready when page loads after Google redirect
+      firebase.auth().getRedirectResult().then(function(result) {
+        if (result && result.user) {
+          sessionStorage.setItem('fb_admin', result.user.uid);
+          sessionStorage.removeItem('fb_signing_in');
+        }
+      }).catch(function(){});
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       var nav = document.getElementById('nav');
       window.addEventListener('scroll', function() {
@@ -1134,15 +1146,6 @@
           if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       });
-      // Init Firebase globally so auth state is ready before comments render
-      var fbCfg = {apiKey:"AIzaSyA2rG2oxan8Jv4l65qEIWCHs598PwFdVWQ",authDomain:"manusite-9b861.firebaseapp.com",projectId:"manusite-9b861"};
-      if (window.firebase && !firebase.apps.length) {
-        firebase.initializeApp(fbCfg);
-        firebase.auth().getRedirectResult().catch(function(){});
-        firebase.auth().onAuthStateChanged(function(user) {
-          window._fbAdmin = user ? user.uid : null;
-        });
-      }
       loadArticles();
     });
   </script>
