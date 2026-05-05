@@ -506,7 +506,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -896,19 +895,31 @@
            + '</div>';
     }
 
-    function fbSignIn() {
-      sessionStorage.setItem('fb_signing_in', '1');
-      firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+    function fbIsAdmin() { return sessionStorage.getItem('fb_admin') === '1'; }
+
+    async function fbAdminCheck() {
+      var pw = prompt('Password:');
+      if (!pw) return;
+      var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+      var hash = Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+      if (hash === 'af90bd4ed49354ef168b2baf6dffff4ed5cfe2a2a9dc3c6d269d5e0f33eb902b') {
+        sessionStorage.setItem('fb_admin', '1');
+        // Re-render all open comment sections
+        document.querySelectorAll('[data-fb-artid]').forEach(function(el) {
+          var artId = el.getAttribute('data-fb-artid');
+          if (window._articles && window._articles[artId]) addGiscus(window._articles[artId]);
+        });
+      } else {
+        alert('Wrong password.');
+      }
     }
 
     function fbDelete(docId) {
-      if (!sessionStorage.getItem('fb_admin')) return;
+      if (!fbIsAdmin()) return;
       if (confirm('Delete this comment?')) {
         firebase.firestore().collection('comments').doc(docId).delete();
       }
     }
-
-    function fbIsAdmin() { return !!sessionStorage.getItem('fb_admin'); }
 
     function fbBuildComment(doc) {
       var d = doc.data();
@@ -931,18 +942,20 @@
 
     function addGiscus(art) {
       var container = document.getElementById('art-comments-' + art.id);
-      if (!container || container.dataset.fbLoaded) return;
+      if (!container) return;
       container.dataset.fbLoaded = '1';
+      container.setAttribute('data-fb-artid', art.id);
       var artId = art.id;
       var db = firebase.firestore();
       var inputStyle = 'background:var(--bg-card);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:0.85rem;padding:0.6rem 0.9rem;border-radius:6px;outline:none';
       container.innerHTML = '';
       var label = document.createElement('span'); label.className = 'comments-label'; label.textContent = '// responses'; container.appendChild(label);
-      if (!fbIsAdmin()) {
-        var adminWrap = document.createElement('div'); adminWrap.style.cssText = 'text-align:right;margin-bottom:1rem';
-        var adminBtn = document.createElement('button'); adminBtn.textContent = 'admin'; adminBtn.style.cssText = 'background:none;border:none;color:var(--text-dim);font-family:var(--mono);font-size:0.6rem;cursor:pointer;letter-spacing:0.1em'; adminBtn.onclick = fbSignIn;
-        adminWrap.appendChild(adminBtn); container.appendChild(adminWrap);
-      }
+      var adminWrap = document.createElement('div'); adminWrap.style.cssText = 'text-align:right;margin-bottom:1rem';
+      var adminBtn = document.createElement('button');
+      adminBtn.textContent = fbIsAdmin() ? 'admin ✓' : 'admin';
+      adminBtn.style.cssText = 'background:none;border:none;color:var(--text-dim);font-family:var(--mono);font-size:0.6rem;cursor:pointer;letter-spacing:0.1em';
+      adminBtn.onclick = fbIsAdmin() ? function(){ sessionStorage.removeItem('fb_admin'); addGiscus(art); } : fbAdminCheck;
+      adminWrap.appendChild(adminBtn); container.appendChild(adminWrap);
       var list = document.createElement('div'); list.style.marginBottom = '2rem'; container.appendChild(list);
       var form = document.createElement('form'); form.style.cssText = 'display:flex;flex-direction:column;gap:0.75rem';
       var nameInput = document.createElement('input'); nameInput.type='text'; nameInput.placeholder='name (optional)'; nameInput.maxLength=60; nameInput.style.cssText=inputStyle;
@@ -1080,11 +1093,6 @@
 
     var fbCfg = {apiKey:"AIzaSyA2rG2oxan8Jv4l65qEIWCHs598PwFdVWQ",authDomain:"manusite-9b861.firebaseapp.com",projectId:"manusite-9b861"};
     if (!firebase.apps.length) firebase.initializeApp(fbCfg);
-    firebase.auth().getRedirectResult().then(function(result) {
-      if (result && result.user) {
-        sessionStorage.setItem('fb_admin', result.user.uid);
-      }
-    }).catch(function(){});
 
     document.addEventListener('DOMContentLoaded', function() {
       var nav = document.getElementById('nav');
