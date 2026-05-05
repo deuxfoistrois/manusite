@@ -944,6 +944,7 @@
       var container = document.getElementById('art-comments-' + art.id);
       if (!container) return;
       container.dataset.fbLoaded = '1';
+      if (_fbUnsub[art.id]) { _fbUnsub[art.id](); delete _fbUnsub[art.id]; }
       container.setAttribute('data-fb-artid', art.id);
       var artId = art.id;
       var db = firebase.firestore();
@@ -970,7 +971,7 @@
           .catch(function(){statusEl.textContent='error — try again.';});
       };
       container.appendChild(form); container.appendChild(statusEl);
-      db.collection('comments').where('artId','==',artId).orderBy('ts','asc').onSnapshot(function(snap) {
+      _fbUnsub[artId] = db.collection('comments').where('artId','==',artId).orderBy('ts','asc').onSnapshot(function(snap) {
         list.innerHTML='';
         if(snap.empty){var p=document.createElement('p');p.style.cssText='font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem';p.textContent='no comments yet.';list.appendChild(p);return;}
         snap.docs.forEach(function(doc){ list.appendChild(fbBuildComment(doc)); });
@@ -1090,6 +1091,8 @@
           .finally(function() { if (++loaded === ARTICLE_ORDER.length) onAllLoaded(); });
       });
     }
+
+    var _fbUnsub = {};
 
     var fbCfg = {apiKey:"AIzaSyA2rG2oxan8Jv4l65qEIWCHs598PwFdVWQ",authDomain:"manusite-9b861.firebaseapp.com",projectId:"manusite-9b861"};
     if (!firebase.apps.length) firebase.initializeApp(fbCfg);
