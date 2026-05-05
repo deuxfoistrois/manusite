@@ -914,11 +914,16 @@
       }
     }
 
-    function fbDelete(docId, el) {
+    function fbDelete(docId) {
       if (!fbIsAdmin()) return;
       if (confirm('Delete this comment?')) {
-        if (el && el.parentNode) el.parentNode.removeChild(el);
+        _fbDeletedIds.add(docId);
         firebase.firestore().collection('comments').doc(docId).delete();
+        // Re-render all open comment lists
+        document.querySelectorAll('[data-fb-artid]').forEach(function(el) {
+          var aid = el.getAttribute('data-fb-artid');
+          if (window._articles && window._articles[aid]) addGiscus(window._articles[aid]);
+        });
       }
     }
 
@@ -933,7 +938,7 @@
       if (fbIsAdmin()) {
         var delBtn = document.createElement('button'); delBtn.textContent = '× delete';
         delBtn.style.cssText = 'background:none;border:none;color:var(--text-dim);font-size:0.65rem;cursor:pointer;font-family:var(--mono);margin-left:0.75rem;opacity:0.5';
-        delBtn.onclick = (function(id, w){ return function(){ fbDelete(id, w); }; })(doc.id, wrap);
+        delBtn.onclick = (function(id){ return function(){ fbDelete(id); }; })(doc.id);
         meta.appendChild(delBtn);
       }
       var bodyEl = document.createElement('p'); bodyEl.style.cssText = 'font-size:0.88rem;color:var(--text-muted);line-height:1.6;margin:0'; bodyEl.textContent = d.body;
@@ -974,8 +979,9 @@
       container.appendChild(form); container.appendChild(statusEl);
       _fbUnsub[artId] = db.collection('comments').where('artId','==',artId).orderBy('ts','asc').onSnapshot(function(snap) {
         list.innerHTML='';
-        if(snap.empty){var p=document.createElement('p');p.style.cssText='font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem';p.textContent='no comments yet.';list.appendChild(p);return;}
-        snap.docs.forEach(function(doc){ list.appendChild(fbBuildComment(doc)); });
+        var visible = snap.docs.filter(function(d){ return !_fbDeletedIds.has(d.id); });
+        if(visible.length===0){var p=document.createElement('p');p.style.cssText='font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem';p.textContent='no comments yet.';list.appendChild(p);return;}
+        visible.forEach(function(doc){ list.appendChild(fbBuildComment(doc)); });
       });
     }
 
@@ -1094,6 +1100,7 @@
     }
 
     var _fbUnsub = {};
+    var _fbDeletedIds = new Set();
 
     var fbCfg = {apiKey:"AIzaSyA2rG2oxan8Jv4l65qEIWCHs598PwFdVWQ",authDomain:"manusite-9b861.firebaseapp.com",projectId:"manusite-9b861"};
     if (!firebase.apps.length) firebase.initializeApp(fbCfg);
