@@ -718,8 +718,8 @@
     
             coda_freelunch: 'The lunch was never really free. Someone always paid. The interesting question is whether that\'s about to become visible on the balance sheet.',
     
-            art_disclosure: 'AI disclosure: Conceptualized and written by me, re-structured and style polished by Claude Sonnet 4.6.',
-            art_disclosure2: 'AI disclosure: Conceptualized and written by me, structured and style polished by Claude Sonnet 4.6.',
+            art_disclosure: 'AI disclosure: Conceptualized and written by me. Structured and style adjusted with the help of Claude Sonnet 4.6 Adaptive (aka Vera).',
+            art_disclosure2: 'AI disclosure: Conceptualized and written by me. Structured and style adjusted with the help of Claude Sonnet 4.6 Adaptive (aka Vera).',
     
     
             subscribe_title: 'Newsletter',
@@ -886,7 +886,7 @@
            + '</header>'
            + '<div id="art-body-' + art.id + '"></div>'
            + '<p class="art-coda" id="art-coda-' + art.id + '"></p>'
-           + '<p class="art-disclosure" data-ui="art_disclosure">AI disclosure: Conceptualized and written by me.</p>'
+           + '<p class="art-disclosure" data-ui="art_disclosure">AI disclosure: Conceptualized and written by me. Structured and style adjusted with the help of Claude Sonnet 4.6 Adaptive (aka Vera).</p>'
            + '<div class="art-comments" id="art-comments-' + art.id + '">'
            + '<span class="comments-label" data-ui="comments_label">// responses</span>'
            + '</div>'
@@ -917,13 +917,7 @@
     function fbDelete(docId) {
       if (!fbIsAdmin()) return;
       if (confirm('Delete this comment?')) {
-        _fbDeletedIds.add(docId);
         firebase.firestore().collection('comments').doc(docId).delete();
-        // Re-render all open comment lists
-        document.querySelectorAll('[data-fb-artid]').forEach(function(el) {
-          var aid = el.getAttribute('data-fb-artid');
-          if (window._articles && window._articles[aid]) addGiscus(window._articles[aid]);
-        });
       }
     }
 
@@ -979,9 +973,8 @@
       container.appendChild(form); container.appendChild(statusEl);
       _fbUnsub[artId] = db.collection('comments').where('artId','==',artId).orderBy('ts','asc').onSnapshot(function(snap) {
         list.innerHTML='';
-        var visible = snap.docs.filter(function(d){ return !_fbDeletedIds.has(d.id); });
-        if(visible.length===0){var p=document.createElement('p');p.style.cssText='font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem';p.textContent='no comments yet.';list.appendChild(p);return;}
-        visible.forEach(function(doc){ list.appendChild(fbBuildComment(doc)); });
+        if(snap.empty){var p=document.createElement('p');p.style.cssText='font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);margin-bottom:1.5rem';p.textContent='no comments yet.';list.appendChild(p);return;}
+        snap.docs.forEach(function(doc){ list.appendChild(fbBuildComment(doc)); });
       });
     }
 
@@ -1100,7 +1093,6 @@
     }
 
     var _fbUnsub = {};
-    var _fbDeletedIds = new Set();
 
     var fbCfg = {apiKey:"AIzaSyA2rG2oxan8Jv4l65qEIWCHs598PwFdVWQ",authDomain:"manusite-9b861.firebaseapp.com",projectId:"manusite-9b861"};
     if (!firebase.apps.length) firebase.initializeApp(fbCfg);
