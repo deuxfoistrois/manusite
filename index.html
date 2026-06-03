@@ -626,7 +626,7 @@
 </html>
 
   <script>
-    const ARTICLE_ORDER = ["englishlatino", "freelunch", "narrativegravity", "narrativeiap", "mainstream", "newflatness"];
+    const ARTICLE_ORDER = ["destructivecreation", "englishlatino", "freelunch", "narrativegravity", "narrativeiap", "mainstream", "newflatness"];
     let currentLang = 'en';
 
     const translations = {
@@ -869,7 +869,9 @@
 
     function buildArticleHTML(art) {
       var sid = art.id === 'mainstream' ? 'article-section' : 'article-section-' + art.id;
-      var hero = art.hero_src
+      var hero = art.hero_html
+        ? art.hero_html
+        : art.hero_src
         ? '<div class="art-hero" style="aspect-ratio:16/9;overflow:hidden;"><img src="' + art.hero_src + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"></div>'
         : '<div class="art-hero" style="aspect-ratio:16/9;background:#0a0a0f;display:flex;align-items:center;justify-content:center;"><span style="font-family:var(--display);font-size:clamp(3.5rem,12vw,8rem);font-weight:900;color:rgba(255,255,255,0.06);">manu.</span></div>';
       return '<div id="' + sid + '">'
