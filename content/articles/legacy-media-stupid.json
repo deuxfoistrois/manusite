@@ -1,0 +1,37 @@
+{
+  "id": "legacymedia",
+  "slug": "legacy-media-stupid",
+  "date": "2026-06-09",
+  "status": "published",
+  "hero": {
+    "type": "image",
+    "src": "/assets/heroes/Backrooms_Post.jpg",
+    "alt": "It's the legacy media, stupid — Backrooms"
+  },
+  "en": {
+    "tag": "Media Economics",
+    "title": "It's the Legacy Media, Stupid",
+    "deck": "337 million YouTube views. ~$1.1 million in ad revenue. One A24 deal later: $118 million at the global box office opening weekend — and counting. The creator economy didn't make Kane Parsons rich. The value chain did.",
+    "coda": "The question worth sitting with: if YouTube is the world's most efficient IP incubator, and the theatrical system is the only structure that can price a hit — who actually owns the pipeline between them, and what does that mean for the next Kane Parsons who decides to stay?",
+    "disclosure": "AI disclosure: Conceptualized and written by me. Structured and style adjusted with the help of Claude Sonnet 4.6 Adaptive (aka Vera).",
+    "card_tag": "media economics",
+    "card_excerpt": "337 million YouTube views earned ~$1.1M. One A24 deal later: $118M at the global box office. The creator economy didn't make Kane Parsons rich. The value chain did."
+  },
+  "es": {
+    "tag": "Economía de Medios",
+    "title": "Son los medios tradicionales, estúpido",
+    "deck": "337 millones de vistas en YouTube. ~USD 1,1 millones en AdSense. Un acuerdo con A24 después: USD 118 millones en taquilla global en el fin de semana de apertura. La creator economy no hizo rico a Kane Parsons. Lo hizo la cadena de valor.",
+    "coda": "La pregunta que conviene dejar abierta: si YouTube es el incubador de IP más eficiente del mundo y el sistema teatral es el único que puede ponerle precio a un hit, ¿quién controla el pipeline entre ambos, y qué significa eso para el próximo Kane Parsons que decide quedarse?",
+    "disclosure": "Divulgación IA: conceptualizado y escrito por mí. Estructurado y pulido en estilo con la ayuda de Claude Sonnet 4.6 Adaptive (aka Vera).",
+    "card_tag": "economía de medios",
+    "card_excerpt": "337 millones de vistas en YouTube generaron ~USD 1,1M. Un acuerdo con A24 después: USD 118M en taquilla global. La creator economy no hizo rico a Kane Parsons. Lo hizo la cadena de valor."
+  },
+  "giscus_term": "It's the Legacy Media, Stupid",
+  "charts": [
+    { "id": "chartRevenue", "type": "bar", "title": "Revenue comparison — YouTube (4 years) vs. Theatrical (opening weekend)" },
+    { "id": "chartValueChain", "type": "bar", "title": "Estimated revenue across the full value chain (USD millions)" },
+    { "id": "chartCeiling", "type": "bar", "title": "YouTube lifetime revenue ceiling vs. theatrical single-weekend gross" },
+    { "id": "chartPerUnit", "type": "bar", "title": "Revenue per unit of consumption — YouTube view vs. movie ticket" },
+    { "id": "chartPipeline", "type": "line", "title": "The Backrooms value pipeline — cumulative estimated revenue by stage (USD millions)" }
+  ]
+}
