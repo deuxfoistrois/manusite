@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Season Engine — Simulate your next season</title>
+<meta name="description" content="Switch AI modules and deal terms on and off and see how the gap between seasons, the dark months, the savings and the expected season 2 audience change.">
+<meta property="og:title" content="Season Engine — Simulate your next season">
+<meta property="og:description" content="An interactive model of how AI and new deal terms can cut the gap between premium series seasons, and the budget with it.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111214'/%3E%3Crect x='6' y='9' width='14' height='5' rx='2' fill='%23F2A541'/%3E%3Crect x='12' y='18' width='14' height='5' rx='2' fill='%23F2A541' opacity='.6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  :root{
+    --bg:#111214;--panel:#1A1B1F;--line:#2E2F34;--track:#3A3B40;
+    --text:#F2EFE8;--muted:#A8A6A0;--dim:#8C8A85;--accent:#F2A541;--tool:#D9A15C;
+    --display:'Space Grotesk',Inter,system-ui,sans-serif;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;cursor:pointer}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  input[type=range]{accent-color:var(--accent);width:100%;min-height:44px}
+  .wrap{max-width:1360px;margin:0 auto;padding:48px 32px 56px;display:flex;flex-direction:column;gap:32px}
+  header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px}
+  .eyebrow{font-size:13px;font-weight:600;letter-spacing:2px;color:var(--accent)}
+  h1{margin:0;font-family:var(--display);font-size:52px;line-height:58px;font-weight:700;letter-spacing:-1px}
+  .lead{margin:0;font-size:18px;line-height:28px;color:var(--muted);max-width:760px}
+  .presets{display:flex;gap:8px;flex-wrap:wrap}
+  .pill{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--track);background:transparent;font-size:14px;font-weight:600}
+  .pill.primary{border-color:var(--accent);background:var(--accent);color:var(--bg)}
+  .layout{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+  aside{flex:1 1 320px;max-width:400px;min-width:0;display:flex;flex-direction:column;gap:24px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px}
+  main{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:24px}
+  .group{display:flex;flex-direction:column;gap:8px}
+  .group h2,.label{margin:0;font-size:13px;font-weight:600;letter-spacing:2px;color:var(--muted)}
+  .seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:4px;background:var(--bg);border-radius:12px}
+  .seg button{min-height:44px;border:none;border-radius:9px;font-size:15px;font-weight:600;background:transparent;color:var(--muted)}
+  .seg button[aria-pressed=true]{background:var(--accent);color:var(--bg)}
+  .note{margin:0;font-size:13px;line-height:20px;color:var(--muted)}
+  .mod{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:56px;padding:10px 14px;border-radius:10px;background:transparent;text-align:left;border:1px solid var(--line)}
+  .mod[aria-pressed=true]{border-color:var(--accent)}
+  .mod .txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .mod .name{font-size:15px;font-weight:600}
+  .mod .impact{font-size:13px;line-height:18px;color:var(--muted)}
+  .mod .tools{font-size:12px;line-height:17px;color:var(--tool)}
+  .switch{flex:none;position:relative;width:40px;height:22px;border-radius:999px;background:var(--track);transition:background .15s}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:999px;background:var(--text);transition:left .15s}
+  .mod[aria-pressed=true] .switch{background:var(--accent)}
+  .mod[aria-pressed=true] .switch::after{left:21px}
+  .budget-head{display:flex;justify-content:space-between;align-items:baseline}
+  .budget-val{font-family:var(--display);font-size:18px;font-weight:600}
+  .kpis{display:flex;flex-wrap:wrap;gap:16px}
+  .kpi{flex:1 1 200px;display:flex;flex-direction:column;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+  .kpi .k{font-size:13px;font-weight:600;letter-spacing:1px;color:var(--muted)}
+  .kpi .row{display:flex;align-items:baseline;gap:12px}
+  .big{font-family:var(--display);font-size:56px;line-height:64px;font-weight:700;color:var(--accent)}
+  .kpi .from{font-size:15px;color:var(--muted)}
+  .kpi .sub{font-size:14px}
+  .card{display:flex;flex-direction:column;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+  .card-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline}
+  .card h2{margin:0;font-size:18px;font-weight:600}
+  .card .side{font-size:14px;color:var(--muted)}
+  .savebar{position:relative;height:44px;border-radius:10px;background:var(--bg);overflow:hidden;display:flex;gap:2px}
+  .savebar div{height:44px;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;color:var(--bg);font-size:12px;font-weight:600;transition:width .25s}
+  .ticks{display:flex;justify-content:space-between;font-size:12px;color:var(--dim)}
+  .audrow{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .audbig{font-family:var(--display);font-size:44px;line-height:52px;font-weight:700;color:var(--accent)}
+  .audbar{position:relative;height:44px}
+  .audbar .bg{position:absolute;left:0;right:0;top:8px;height:28px;border-radius:8px;background:var(--bg)}
+  .audbar .fill{position:absolute;left:0;top:8px;height:28px;border-radius:8px;background:var(--accent);transition:width .25s}
+  .audbar .today{position:absolute;top:0;width:2px;height:44px;margin-left:-1px;background:var(--text);left:67%}
+  .audscale{position:relative;height:16px;font-size:12px;color:var(--dim)}
+  .legend{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--muted)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .sw{display:inline-block;width:18px;height:10px;border-radius:3px}
+  .gantt{position:relative;display:flex;flex-direction:column;gap:10px}
+  .markers{position:absolute;top:0;bottom:26px;left:124px;right:0;pointer-events:none}
+  .markers div{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px}
+  .grow{display:flex;align-items:center;gap:12px}
+  .grow .lbl{flex:none;width:112px;font-size:14px;font-weight:500}
+  .grow .trk{position:relative;flex:1 1 auto;height:28px}
+  .ghost{position:absolute;top:0;height:28px;border-radius:6px;background:#2A2B30}
+  .bar{position:absolute;top:5px;height:18px;border-radius:5px;display:flex;align-items:center;padding:0 6px;overflow:hidden;white-space:nowrap;font-size:11px;font-weight:600;transition:left .25s,width .25s}
+  .air{position:absolute;top:5px;height:18px;border-radius:5px}
+  .drop{position:absolute;top:7px;width:14px;height:14px;margin-left:-7px;border-radius:3px;background:var(--accent)}
+  .axis{position:relative;flex:1 1 auto;height:16px;font-size:12px;color:var(--dim)}
+  .axis span{position:absolute;transform:translateX(-50%)}
+  .foot{margin:0;font-size:13px;line-height:20px;color:var(--dim)}
+  @media (max-width:640px){
+    .wrap{padding:32px 16px 40px}
+    h1{font-size:36px;line-height:42px}
+    .big{font-size:44px;line-height:52px}
+    .grow .lbl{width:84px;font-size:13px}
+    .markers{left:96px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="eyebrow">SEASON ENGINE</div>
+      <h1>Simulate your next season</h1>
+      <p class="lead">Switch AI modules and deal terms on and off. Watch the gap, the dark months, the savings and the audience move.</p>
+    </div>
+    <div class="presets">
+      <button type="button" class="pill" data-action="today">Reset to today</button>
+      <button type="button" class="pill primary" data-action="full">Full engine</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside>
+      <section class="group">
+        <h2>RELEASE</h2>
+        <div class="seg" id="release">
+          <button type="button" data-mode="binge">Binge</button>
+          <button type="button" data-mode="weekly">Weekly</button>
+          <button type="button" data-mode="split">Split</button>
+        </div>
+        <p class="note" id="release-note"></p>
+      </section>
+
+      <section class="group">
+        <h2>AI MODULES</h2>
+        <div class="group" id="ai-list"></div>
+      </section>
+
+      <section class="group">
+        <h2>DEAL STRUCTURE</h2>
+        <div class="group" id="deal-list"></div>
+      </section>
+
+      <section class="group" style="gap:10px">
+        <div class="budget-head"><label for="budget" class="label">SEASON BUDGET</label><span class="budget-val" id="budget-label"></span></div>
+        <input id="budget" type="range" min="4" max="30" step="1" value="12">
+      </section>
+    </aside>
+
+    <main>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="k">S1 FINALE → S2 PREMIERE</div>
+          <div class="row"><span class="big" id="gap"></span><span class="from">months, from 24</span></div>
+          <div class="sub" id="gap-delta"></div>
+        </div>
+        <div class="kpi">
+          <div class="k">MONTHS WITH NOTHING NEW</div>
+          <div class="row"><span class="big" id="dark"></span><span class="from">from 23.5</span></div>
+          <div class="sub" id="dark-note"></div>
+        </div>
+        <div class="kpi">
+          <div class="k">SAVED PER SEASON</div>
+          <div class="row"><span class="big" id="pct"></span><span class="from">of budget</span></div>
+          <div class="sub" id="usd"></div>
+        </div>
+      </div>
+
+      <section class="card">
+        <div class="card-head"><h2>Cost savings</h2><span class="side" id="s3"></span></div>
+        <div class="savebar" id="segments"></div>
+        <div class="ticks"><span>0%</span><span>5%</span><span>10%</span><span>15%</span></div>
+        <div class="side" id="risk"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>Expected season 2 audience</h2><span class="side">share of the season 1 audience kept</span></div>
+        <div class="audrow"><span class="audbig" id="aud"></span><span style="font-size:15px" id="aud-delta"></span></div>
+        <div class="audbar"><div class="bg"></div><div class="fill" id="aud-fill"></div><div class="today"></div></div>
+        <div class="audscale">
+          <span style="position:absolute;left:0">0%</span>
+          <span style="position:absolute;left:67%;transform:translateX(-50%);color:var(--text)">Today’s cycle · 67%</span>
+          <span style="position:absolute;right:0">100% of S1</span>
+        </div>
+        <p class="note">Based on Luminate’s US data for 10 returning series, first 12 weeks. Gaps over 18 months averaged a 33% audience loss (7 shows, from −7% to −59%). Returns after about a year ranged from −22% to +132%; the model uses the conservative end. Gap measured premiere to premiere, as Luminate does.</p>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Timeline</h2>
+          <div class="legend">
+            <span><span class="sw" style="background:#34353A"></span>Today</span>
+            <span><span class="sw" style="background:var(--accent)"></span>Season Engine</span>
+            <span><span class="sw" style="border:2px solid var(--accent)"></span>Option-paid</span>
+          </div>
+        </div>
+        <div class="gantt">
+          <div class="markers" aria-hidden="true">
+            <div style="background:#6A6B70;left:14.286%"></div>
+            <div style="background:var(--dim);left:100%"></div>
+            <div id="m-finale" style="width:0;border-left:2px dashed var(--muted)"></div>
+            <div id="m-premiere" style="background:var(--accent)"></div>
+          </div>
+          <div id="rows" style="display:flex;flex-direction:column;gap:10px"></div>
+          <div class="grow">
+            <div class="lbl">On screen</div>
+            <div class="trk" id="airs"></div>
+          </div>
+          <div class="grow">
+            <div class="lbl"></div>
+            <div class="axis">
+              <span style="left:0;transform:none">M−4</span>
+              <span style="left:14.286%">M0</span>
+              <span style="left:35.714%">M6</span>
+              <span style="left:57.143%">M12</span>
+              <span style="left:78.571%">M18</span>
+              <span style="left:auto;right:0;transform:none">M24</span>
+            </div>
+          </div>
+        </div>
+        <p class="side" style="margin:0" id="premiere-note"></p>
+      </section>
+
+      <p class="foot">Illustrative model for a premium 8×50′ drama. Budget shares, AI cuts and durations are the author’s estimates, to be validated on a pilot season.</p>
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var ALL = { greenlight: true, writing: true, previs: true, set: true, post: true, loc: true, mini: true, bank: true, bridge: true };
+  var NONE = { greenlight: false, writing: false, previs: false, set: false, post: false, loc: false, mini: false, bank: false, bridge: false };
+  var state = { mode: 'binge', on: Object.assign({}, ALL), budget: 12 };
+
+  var $ = function (id) { return document.getElementById(id); };
+  function fmt(x) { return String(Math.round(x * 10) / 10); }
+  function pos(m) { return (m + 4) / 28 * 100; }
+  function span(a, b) { return 'left:' + pos(a).toFixed(3) + '%;width:' + ((b - a) / 28 * 100).toFixed(3) + '%;'; }
+  function el(tag, cls, style, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (style) n.setAttribute('style', style);
+    if (text) n.textContent = text;
+    return n;
+  }
+
+  function modules(on, weekly) {
+    return {
+      ai: [
+        ['greenlight', 'Demand forecasting', (weekly ? '−2.5 mo' : '−3 mo') + ' · decide on day 7–28 data', 'Platform first-party data via a data-sharing clause · completion and retention model'],
+        ['writing', 'Room copilot', '−1.5 mo · −1.2% · continuity checks, fast read-throughs', 'Claude or Gemini on a private series bible · ElevenLabs table reads'],
+        ['previs', 'Breakdown + gen-AI previs', '−1.5 mo · −1.6% · whole season as animatic', 'Filmustage breakdown and schedule · Runway, Veo or Marey animatics'],
+        ['set', 'Generated second unit', on.previs ? '−0.5 mo · −6.0% · locked coverage, fewer setups' : '−0.25 mo · −3.0% · needs previs for full effect', 'Grey-box stages with AI environments · Marey B-roll · InterPositive (Netflix shows)'],
+        ['post', 'AI assembly + VFX', '−2 mo · −4.5% · overnight cuts, faster shots', 'Resolve IntelliScript assemblies · Flow Studio CG · Nuke CopyCat'],
+        ['loc', 'Voice + lip-sync dubbing', '−1.2% · day-and-date in every market', 'ElevenLabs voices · Flawless TrueSync lip sync']
+      ],
+      deal: [
+        ['mini', 'Option-paid mini-room', '−1.5 mo · 1.5% at risk before greenlight', 'Showrunner + 2 writers on the room copilot'],
+        ['bank', 'Bank S3 in the same shoot', '+9% saved on season 3', 'Filmustage multi-unit scheduling to cross-board both seasons'],
+        ['bridge', 'Vertical bridge drops', 'fills dark months · funded from P&A', 'Runway, Veo or Kling, built from the series’ own assets']
+      ]
+    };
+  }
+
+  function renderModules(listEl, items, on) {
+    listEl.textContent = '';
+    items.forEach(function (m) {
+      var b = el('button', 'mod');
+      b.type = 'button';
+      b.setAttribute('data-toggle', m[0]);
+      b.setAttribute('aria-pressed', on[m[0]] ? 'true' : 'false');
+      var t = el('span', 'txt');
+      t.appendChild(el('span', 'name', null, m[1]));
+      t.appendChild(el('span', 'impact', null, m[2]));
+      t.appendChild(el('span', 'tools', null, m[3]));
+      b.appendChild(t);
+      var sw = el('span', 'switch');
+      sw.setAttribute('aria-hidden', 'true');
+      b.appendChild(sw);
+      listEl.appendChild(b);
+    });
+  }
+
+  function render() {
+    var on = state.on, mode = state.mode, budget = state.budget;
+    var weekly = mode === 'weekly', split = mode === 'split';
+
+    // Schedule model (months from the S1 premiere at M0)
+    var R = on.greenlight ? (weekly ? 1.5 : 1) : 4;
+    var Wt = on.writing ? 6.5 : 8;
+    var Wa = Wt - (on.mini ? 1.5 : 0);
+    var P = on.previs ? 2.5 : 3;
+    var S = on.set ? (on.previs ? 3.5 : 3.75) : 4;
+    var T = on.post ? 4 : 6;
+    var roomStart = R, roomEnd = R + Wa;
+    var prepStart = roomEnd - (on.previs ? 1 : 0), prepEnd = prepStart + P;
+    var shootStart = prepEnd, shootEnd = shootStart + S;
+    var postStart = shootEnd - 1, postEnd = postStart + T;
+    var rolling = (weekly || split) ? 1.5 : 0;
+    var premiere = postEnd - rolling;
+    var finale = weekly ? 1.6 : (split ? 1.5 : 0);
+    var gap = premiere - finale;
+    var tail = 0.5;
+    var drops = [2, 5, 8, 11].filter(function (d) { return on.bridge && d > finale + tail && d < premiere; });
+    var dark = Math.max(0, gap - tail - drops.length);
+
+    // Cost model (% of a season budget)
+    var segDefs = [
+      { label: 'Shoot', v: on.set ? (on.previs ? 6 : 3) : 0, color: '#F2A541' },
+      { label: 'Post', v: on.post ? 4.5 : 0, color: '#F7C27A' },
+      { label: 'Previs', v: on.previs ? 1.6 : 0, color: '#E08A2C' },
+      { label: 'Writing', v: on.writing ? 1.2 : 0, color: '#FAD7A6' },
+      { label: 'Dubs', v: on.loc ? 1.2 : 0, color: '#D9A15C' }
+    ];
+    var total = segDefs.reduce(function (s, g) { return s + g.v; }, 0);
+
+    // Audience model (Luminate sample, premiere-to-premiere gap)
+    function audienceLoss(g) {
+      if (g <= 12) return -20;
+      if (g >= 18) return -33;
+      return -20 - (g - 12) / 6 * 13;
+    }
+    var aud = Math.round(100 + audienceLoss(premiere));
+    var audGain = aud - 67;
+
+    // Release controls
+    Array.prototype.forEach.call($('release').children, function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-mode') === mode ? 'true' : 'false');
+    });
+    $('release-note').textContent = weekly
+      ? 'Weekly: the S1 finale lands seven weeks after the premiere, and S2 can premiere while its last episodes finish post. The full-season signal arrives half a month later.'
+      : (split
+        ? 'Split: two drops six weeks apart, two launch peaks. Volume 2 of S2 can finish post after volume 1 premieres.'
+        : 'Binge: every episode, finale included, drops on day one. The viewing peak fades within weeks.');
+
+    var mods = modules(on, weekly);
+    renderModules($('ai-list'), mods.ai, on);
+    renderModules($('deal-list'), mods.deal, on);
+
+    $('budget-label').textContent = 'USD ' + budget + 'M';
+    if (String($('budget').value) !== String(budget)) $('budget').value = budget;
+
+    // KPIs
+    var saved = 24 - gap;
+    $('gap').textContent = fmt(gap);
+    $('gap-delta').textContent = saved > 0 ? fmt(saved) + ' months sooner than today' : 'Today’s cycle';
+    $('dark').textContent = fmt(dark);
+    $('dark-note').textContent = on.bridge ? drops.length + ' spin-off drops fill the gap' : 'Turn on the vertical bridge to fill it';
+    $('pct').textContent = total.toFixed(1) + '%';
+    $('usd').textContent = 'USD ' + (budget * total / 100).toFixed(2) + 'M on a USD ' + budget + 'M season';
+
+    // Savings bar
+    var segEl = $('segments');
+    segEl.textContent = '';
+    segDefs.filter(function (g) { return g.v > 0; }).forEach(function (g) {
+      segEl.appendChild(el('div', null, 'width:' + (g.v / 15 * 100).toFixed(2) + '%;background:' + g.color + ';',
+        g.v >= 1.5 ? g.label + ' ' + g.v.toFixed(1) + '%' : g.label));
+    });
+    $('s3').textContent = on.bank ? 'Season 3: a further 9% saved, ready 12 months after S2' : 'Bank S3 to save a further 9% on season 3';
+    $('risk').textContent = on.mini
+      ? 'At risk before greenlight: 1.5% of budget, USD ' + (budget * 0.015).toFixed(2) + 'M, credited to S2 if it goes ahead.'
+      : 'Nothing spent before greenlight.';
+
+    // Audience bar
+    $('aud').textContent = aud + '%';
+    $('aud-delta').textContent = audGain > 0 ? '+' + audGain + ' points of the S1 audience vs today' : 'Today’s cycle: a third of the audience lost';
+    $('aud-fill').style.width = aud + '%';
+
+    // Timeline rows
+    var rowsEl = $('rows');
+    rowsEl.textContent = '';
+    [
+      ['Greenlight', [0, 4], 0, R, false],
+      ['Mini-room', null, on.mini ? -3 : 0, on.mini ? 1 : 0, true],
+      ['Writing', [4, 12], roomStart, roomEnd, false],
+      ['Prep', [12, 15], prepStart, prepEnd, false],
+      ['Shoot', [15, 19], shootStart, shootEnd, false],
+      ['Post', [18, 24], postStart, postEnd, false]
+    ].forEach(function (r) {
+      var row = el('div', 'grow');
+      row.appendChild(el('div', 'lbl', null, r[0]));
+      var trk = el('div', 'trk');
+      if (r[1]) trk.appendChild(el('div', 'ghost', span(r[1][0], r[1][1])));
+      var w = r[3] - r[2];
+      if (w > 0) {
+        var look = r[4] ? 'border:2px solid #F2A541;color:#F2A541;' : 'background:#F2A541;color:#111214;';
+        trk.appendChild(el('div', 'bar', span(r[2], r[3]) + look, w >= 1.5 ? fmt(w) + ' mo' : ''));
+      }
+      row.appendChild(trk);
+      rowsEl.appendChild(row);
+    });
+
+    // On screen windows and bridge drops
+    function windows(start) {
+      if (weekly) return [[start, start + finale + tail]];
+      if (split) return [[start, start + tail], [start + 1.5, start + 1.5 + tail]];
+      return [[start, start + tail]];
+    }
+    var airsEl = $('airs');
+    airsEl.textContent = '';
+    windows(0).forEach(function (w) { airsEl.appendChild(el('div', 'air', span(w[0], w[1]) + 'background:#8C8A85;')); });
+    windows(premiere).forEach(function (w) {
+      if (w[0] < 24) airsEl.appendChild(el('div', 'air', span(w[0], Math.min(24, w[1])) + 'background:#F2A541;'));
+    });
+    drops.forEach(function (d) { airsEl.appendChild(el('div', 'drop', 'left:' + pos(d).toFixed(3) + '%;')); });
+
+    $('m-finale').style.left = pos(finale).toFixed(3) + '%';
+    $('m-premiere').style.left = pos(premiere).toFixed(3) + '%';
+    $('premiere-note').textContent = 'Dashed line: S1 finale at M' + fmt(finale) + '. Amber line: S2 premiere at M' + fmt(premiere) +
+      (rolling ? ', with its last episodes still in post.' : '.') + ' Grey line: today’s S2, M24.';
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('button');
+    if (!t) return;
+    if (t.hasAttribute('data-toggle')) {
+      var id = t.getAttribute('data-toggle');
+      state.on[id] = !state.on[id];
+      render();
+      var again = document.querySelector('[data-toggle="' + id + '"]');
+      if (again) again.focus();
+    } else if (t.hasAttribute('data-mode')) {
+      state.mode = t.getAttribute('data-mode');
+      render();
+    } else if (t.getAttribute('data-action') === 'today') {
+      state.mode = 'binge';
+      state.on = Object.assign({}, NONE);
+      render();
+    } else if (t.getAttribute('data-action') === 'full') {
+      state.on = Object.assign({}, ALL);
+      render();
+    }
+  });
+
+  $('budget').addEventListener('input', function (e) {
+    state.budget = Number(e.target.value);
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
